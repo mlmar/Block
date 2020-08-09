@@ -103,7 +103,11 @@ const direction = {
   DOWN : 40,
   LEFT : 37,
   RIGHT : 39,
-  ALL : "ALL"
+  ALL : "ALL",
+  W: 87,
+  S: 83,
+  A: 65,
+  D: 68
 }
 const directions = [direction.UP, direction.DOWN, direction.LEFT, direction.RIGHT];
 
@@ -152,24 +156,28 @@ function drawBlock(b) {
 // move in the direction 
 function move(key) {
   switch(key) {
+    case direction.W:
     case direction.UP:
       console.log("UP");
       if(player.y > 1) {
         player.y -= player.speed;
       }
       break;
+    case direction.S:
     case direction.DOWN:
       console.log("DOWN");
       if(player.y + player.height < canvas.height)  {
         player.y += player.speed;
       }
       break;
+    case direction.A:
     case direction.LEFT:
       console.log("LEFT");
       if(player.x > 1) {
         player.x -= player.speed;
       }
       break;
+    case direction.D:
     case direction.RIGHT:
       console.log("RIGHT");
       if(player.x + player.width < canvas.width) {
@@ -191,10 +199,10 @@ window.onkeydown = function(event) {
 
   // spacebar or enter starts game
   if(!playing && (key == 32 || key == 13)) {
-    console.log("Keyboard start")
 
     if(blocks.length > 0) {
-      reset()
+      reset();
+
     } else {
       start();
     }
@@ -709,6 +717,7 @@ function transition() {
 //  initializer and default dynamic variables
 //  reset random blocks
 function reset() {
+  playing = false;
   if(blocks.length > 0) {
     for(i in blocks) {
       blocks[i].state = direction.DOWN;
