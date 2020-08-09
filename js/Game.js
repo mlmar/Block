@@ -201,7 +201,7 @@ window.onkeydown = function(event) {
   if(!playing && (key == 32 || key == 13)) {
 
     if(blocks.length > 0) {
-      reset();
+      reset(); // bug here
 
     } else {
       start();
