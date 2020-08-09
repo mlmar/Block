@@ -17,13 +17,41 @@ var labelLevel = document.getElementById("labelLevel");
 const TRANSPARENT = "rgba(255, 255, 255, 0)";
 const WHITE = "WHITE";
 const BLACK = "BLACK";
-const BLUE = "#03A9F4";
-const ORANGE = "#F44336";
-const GREEN = "#4CAF50";
-const PINK = "#E91E63";
+
+const BLUE = "rgb(3,169,244)";
+const BLUE_T = "rgba(3,169,244,.5)";
+
+const ORANGE = "rgb(244,67,54)";
+const ORANGE_T = "rgba(244,67,54,.5)";
+
+const GREEN = "rgb(76,175,80)";
+const GREEN_T = "rgba(76,175,80,.5)";
+
+const PINK = "rgb(233,30,99)";
+const PINK_T = "rgba(233,30,99,.5)";
+
 const AQUA = "#00f1c8";
+const AQUA_T = "rgba(0,241,200,.5)";
+
 const DARK_BLUE = "#003d9e";
 const LIME = "#3aff5f";
+
+function colorMatch(c) {
+  switch(c) {
+    case BLUE:
+      return BLUE_T;
+    case ORANGE: 
+      return ORANGE_T;
+    case GREEN: 
+      return GREEN_T;
+    case PINK: 
+      return PINK_T;
+    case AQUA: 
+      return AQUA_T;
+    default:
+      return BLUE_T;  
+  }
+}
 
 const colors = [ORANGE, GREEN, PINK, AQUA];
 var clear_color = WHITE;
@@ -79,6 +107,8 @@ var Block = function(x, y, width, height, color) {
 
   this.color = color;
   this.state; // block state
+  
+  this.collide = true;
 }
 
 // clear canvas
@@ -218,7 +248,10 @@ function useItem(block) {
       activeItem = true;
       break;
     case "clear":
-      blocks = [];
+      for(i in blocks) {
+        blocks[i].collide = false;
+        blocks[i].color = colorMatch(blocks[i].color);
+      }
       break;
   }
 
@@ -457,11 +490,11 @@ function update() {
     moveRandom(blocks[i]);
     drawBlock(blocks[i]);
 
-    if(collision(player, blocks[i]) && !cheat) {
+    if(blocks[i].collide && collision(player, blocks[i]) && !cheat) {
       console.log("Stop");
       stop();
     }
-
+    
     if(items.length > 0 && collision(items[0], blocks[i]))
       items.pop();
   }
