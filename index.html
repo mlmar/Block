@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Block </title>
+
+    <link rel="stylesheet" href="css/Popup.css"></link>
+    <link rel="stylesheet" href="css/main.css"></link>
+  </head>
+
+  <body>
+
+    <div class="divMain" id="divMain">
+      <nav>
+      </nav>
+
+      <holder class="holder">
+        <div class="holder-secondary" id="holderSecondary">
+          
+          <canvas width="500" height="500" class="canvas" id="canvas"> </canvas>
+
+          <div class="menu">
+            <div class="menu-grid">
+              <label class="label" id="labelScore"> score: 0 </label>
+              <label class="label label-level" id="labelLevel"> level: 1 </label>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="overlay popup popup-top popup-open" id="overlay">
+          <div class="overlay popup-contents"> 
+            <label class="label-overlay" id="labelOverlay"> press space to start </label>
+          </div>
+        </div>
+
+      </div>
+
+      <footer>
+      </footer>
+
+    </div>
+
+    <script src="js/Game.js"></script>
+
+  </body>
+
+</html>

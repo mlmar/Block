@@ -1,0 +1,92 @@
+/********************************** popup css **********************************/
+
+/* indicate what layer (div) popup should display in */
+.popup {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  pointer-events: none;
+  margin: auto;
+}
+
+
+
+/********************************** alignment **********************************/
+/* center the popup */
+.popup-center {
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+}
+
+/* place near top of the screen */
+.popup-top {
+  margin-top: 10%;
+  align-items: center;
+  position: fixed;
+}
+
+/* top left corner */
+.popup-corner {
+  margin-top: 10%;
+  margin-left: 10%;
+  position: fixed;
+}
+
+/********************************** animation/states **********************************
+  use one as default state in class then toggle both
+*/
+
+/* opening animation, default to .popup display */
+.popup-open {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .2s linear;
+  pointer-events: all;
+}
+
+/* closing animation */
+.popup-closed {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility .2s, opacity .2s linear;
+}
+
+
+/********************************** contents **********************************/
+
+/* make this the only pressable spot */
+.popup-contents {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: #212121;
+  pointer-events: all;
+  padding-bottom: .3rem;
+  min-height: fit-content;
+  min-width: fit-content;
+  box-shadow: 0 0 1rem .2rem rgba(0,0,0,.5);
+}
+
+.popup-fill {
+  height: 100%;
+  width: 100%;
+}
+
+/* cutom label for popups */
+.popup-label {
+  font-family: monospace;
+  font-size: 1.3rem;
+  font-weight: 400;
+  padding-top: .3rem;
+  padding-left: .3rem;
+  padding-right: .3rem;
+  color: white;
+}
+
+/* auto width for contents */
+.stretch {
+  max-width: fit-content;
+  min-width: 50%;
+}

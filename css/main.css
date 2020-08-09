@@ -1,0 +1,83 @@
+html {
+  background: none !important;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.darken {
+  background: black;
+  transition: background 1s linear !important;
+  color: white !important;
+}
+
+.transparent {
+  opacity: 0;
+  transition: opacity 1s linear !!important;
+}
+
+.divMain {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+nav {
+  height: 10%;
+}
+
+.holder {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+}
+
+footer {
+  height: 5%;
+}
+
+.canvas {
+  background: none;
+  border: black;
+  border-style: solid;
+  border-width: .3rem;
+}
+
+
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* border: #212121; */
+  /* border-style: solid; */
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+  width: 100%;
+}
+
+.label {
+  background: none;
+  font-family: impact !important;
+  font-size: 2rem;
+  text-transform: lowercase;
+}
+
+.label-level {
+  text-align: right;
+}
+
+.overlay {
+  background: none !important;
+  font-family: impact;
+  font-size: 2rem;
+  box-shadow: none;
+}
