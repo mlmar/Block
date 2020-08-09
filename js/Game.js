@@ -7,12 +7,11 @@ var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var labelSore = document.getElementById("labelScore");
 
+var overlaySettings = document.getElementById("overlaySettings");
 var overlayBlack = document.getElementById("overlayBlack");
 var overlay = document.getElementById("overlay");
 var labelOverlay = document.getElementById("labelOverlay");
 var labelLevel = document.getElementById("labelLevel");
-
-
 
 // colors
 const TRANSPARENT = "rgba(255, 255, 255, 0)";
@@ -81,11 +80,11 @@ var score; // keeping track of score -- dictates level
 var level; // every "mutliplier", level increases
 
 // setting the score distance between each level
-//  call setLevelMultiplier before starting
-var MAX_LEVEL_AMOUNT = 16;
-var multiplier;
-var halftick;
-var levels = [] // each level is i * multiplier
+//  call setLevelTick before starting
+var MAX_LEVEL_AMOUNT = 16; // preprogrammedd levels 0-14
+var tick; // score in between each level
+var halftick; // half a tick
+var levels = [] // each level is i * tick
 
 var referencePoint; // will be used to calculate elapsed time for infinite runs
 
@@ -97,19 +96,26 @@ var originalSpeed; // used to return to original speed
 var originalScore; // used to meassure when a halftick has passed
 
 
+const ESCAPE = 27;
+const SPACE = 32;
 // direction enum keycodes
 const direction = { 
   UP : 38,
   DOWN : 40,
   LEFT : 37,
   RIGHT : 39,
-  ALL : "ALL",
   W: 87,
   S: 83,
   A: 65,
   D: 68
 }
 const directions = [direction.UP, direction.DOWN, direction.LEFT, direction.RIGHT];
+
+// KNOWN BUG: pressing space multiple times during the reset screen
+//            will cal lthe reset method multiple times
+// BAND AID SOLUTION: count how many times space was pressed in a buffer
+//                    and only run on the first press
+var buffer = 0; 
 
 /***************************** PRIMARY METHODS *****************************/
 
@@ -158,28 +164,24 @@ function move(key) {
   switch(key) {
     case direction.W:
     case direction.UP:
-      console.log("UP");
       if(player.y > 1) {
         player.y -= player.speed;
       }
       break;
     case direction.S:
     case direction.DOWN:
-      console.log("DOWN");
       if(player.y + player.height < canvas.height)  {
         player.y += player.speed;
       }
       break;
     case direction.A:
     case direction.LEFT:
-      console.log("LEFT");
       if(player.x > 1) {
         player.x -= player.speed;
       }
       break;
     case direction.D:
     case direction.RIGHT:
-      console.log("RIGHT");
       if(player.x + player.width < canvas.width) {
         player.x += player.speed;
       }
@@ -194,18 +196,15 @@ function move(key) {
 window.onkeydown = function(event) {
   var key = event.keyCode;
 
-  if(playing)
+  if(playing) {
     move(key);
-
-  // spacebar or enter starts game
-  if(!playing && (key == 32 || key == 13)) {
-
-    if(blocks.length > 0) {
-      reset(); // bug here
-
-    } else {
-      start();
+  } else if(!playing && (key == SPACE)) { // space bar to start game
+    if(buffer == 0) { // only run on the first space press
+      buffer++; // increment everytime space was presed
+      reset(); // reset screen --> start game
     }
+  } else if(key == ESCAPE) {
+    settings();
   }
 }
 
@@ -428,7 +427,7 @@ function updateTick() {
   /******* level 4-7 *******/
 
   // pick two different random directions for each level
-  if(score >= levels[4] && score % multiplier == 0) {
+  if(score >= levels[4] && score % tick == 0) {
     console.log("Random directions @ " + score);
     randomDirections = pickRandom(directions, 2);
   }
@@ -493,7 +492,7 @@ function updateTick() {
   if(score > levels[14]) {
     // continuously update the reference point so the same actions
     // repeat every 4 ticks
-    if(score == referencePoint + multiplier * 4) {
+    if(score == referencePoint + tick * 4) {
       referencePoint = score;
       gap--;
       randomSpeed++;
@@ -515,7 +514,7 @@ function updateTick() {
 
 function speedHandler() {
   // !!! increment the speed every 4 levels until 
-  if(score < levels[16] && score % (multiplier * 4) == 0) {
+  if(score < levels[16] && score % (tick * 4) == 0) {
     console.log("Speed increase");
     randomSpeed++;
   }
@@ -538,7 +537,7 @@ function itemHandler() {
 }
 
 function labelHandler() {
-  if(score % multiplier == 0) {
+  if(score % tick == 0) {
     labelLevel.innerText = "Level: " + level++;
   }
 
@@ -574,7 +573,7 @@ function dark() {
   }
 
   // bring the canvas back into view
-  if(score == levels[9] + multiplier * .15) {
+  if(score == levels[9] + tick * .15) {
     canvas.classList.remove("transparent");
     clear_color = BLACK;
   } 
@@ -604,10 +603,10 @@ function reversal(level) {
 
 // this will loop infinitely after level 9
 function infinite(level) {
-  var level2 = level + multiplier; // relative to level 11
-  var level3 = level + multiplier * 2; // relative to level 12
-  var level4 = level + multiplier * 3; // relative to level 13
-  var level5 = level + multiplier * 4; // relative to level 14
+  var level2 = level + tick; // relative to level 11
+  var level3 = level + tick * 2; // relative to level 12
+  var level4 = level + tick * 3; // relative to level 13
+  var level5 = level + tick * 4; // relative to level 14
   
   if(score == level + 1)
     console.log("Starting infinite segment for " + level);
@@ -697,16 +696,14 @@ function stop() {
 
 
 function transition() {
-  clear();
-  for(i in blocks) {
-    moveRandom(blocks[i]);
-    drawBlock(blocks[i]);
-  }
-
-  if(blocks.length > 0)
-    deleteOutOfFrame(blocks[0]);
-
   if(blocks.length > 0) {
+    clear();
+    for(i in blocks) {
+      moveRandom(blocks[i]);
+      drawBlock(blocks[i]);
+    } 
+
+    deleteOutOfFrame(blocks[0]);
     window.requestAnimationFrame(transition);
   } else {
     start();
@@ -717,21 +714,17 @@ function transition() {
 //  initializer and default dynamic variables
 //  reset random blocks
 function reset() {
-  playing = false;
-  if(blocks.length > 0) {
-    for(i in blocks) {
-      blocks[i].state = direction.DOWN;
-      blocks[i].speed = 16;
-    }
-
-    window.requestAnimationFrame(transition);
+  for(i in blocks) {
+    blocks[i].state = direction.DOWN;
+    blocks[i].speed = 16;
   }
+
+  window.requestAnimationFrame(transition);
 }
 
 function resetValues() {
   clear(); // clear the board
 
-  playing = false;
   // reset all dynamic variables to defaults
   clear_color = WHITE;
   player = new Block(STARTING_XY, STARTING_XY, BLOCK_SIZE, BLOCK_SIZE, PLAYER_COLOR);
@@ -745,18 +738,25 @@ function resetValues() {
   score = 0;
   level = 1;
 
+  referencePoint = 0;
+  lastUsed = "";
+
+  buffer = 0;
+
   update(); // update with new board
 }
 
 // start the game loop
 function start() {
-  console.log("Speed: " + randomSpeed);
+  console.log("Starting game " + blocks);
+
+  playing = true;
   resetValues();
+  
   overlay.classList.remove("popup-open");
   overlay.classList.add("popup-closed");
   document.body.classList.remove("darken");
   canvas.classList.remove("transparent");
-  playing = true;
   
   window.requestAnimationFrame(gameLoop);
 }
@@ -774,8 +774,8 @@ function gameLoop() {
 /***************************** CUSTOMIZE *****************************/
 
 // increment between each level
-function setLevelMultiplier(n) {
-  multiplier = n;
+function setLevelTick(n) {
+  tick = n;
   halftick = n / 2;
   for(i = 0; i < MAX_LEVEL_AMOUNT; i++) {
     levels[i] = i * n;
@@ -783,11 +783,12 @@ function setLevelMultiplier(n) {
   console.log(levels);
 }
 
-
+function settings() {
+  overlaySettings.classList.toggle("popup-open");
+  overlaySettings.classList.toggle("popup-closed");
+}
 
 
 cheat = false;
-
-
-reset();
-setLevelMultiplier(20);
+resetValues();
+setLevelTick(20);
