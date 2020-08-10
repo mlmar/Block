@@ -53,6 +53,8 @@ function randomThree() {
   randomBlock(randomSpeed, randomDirections[2]);
 }
 
+
+// for a special difficulty
 function maxDifficulty() {
   if(score >= levels[0]) {
     dark(levels[0] + 1);
@@ -78,8 +80,20 @@ function maxDifficulty() {
     randomThree();
   }
 
+  if(score == levels[8]) {
+    referencePoint = score;
+  }
+
   if(score > levels[8]) {
-    clutter();
+    // continuously update the reference point so the same actions
+    // repeat every 4 ticks
+    if(score == referencePoint + tick * 4) {
+      referencePoint = score;
+      gap--;
+      randomSpeed++;
+    }
+
+    infinite(referencePoint);
   }
 }
 
@@ -191,16 +205,35 @@ function speedHandler() {
 function itemHandler() {
   // disable random items for a half tick after activation
   //  disable effects of previous item after a half tick
+
+  if((bonus % 4 == 0 ||  bonus % 7 == 0) && bonus > 0) {
+    bonus++;
+    player.state = "life";
+    labelBonus.classList.add("label-bonus");
+    useItem(player, true);
+  }
+  
+  if(lastUsed == "reverse") {
+    reversal(originalScore + halftick);
+  }
+
   if(originalScore + halftick == score) {
     if(lastUsed == "slow")
       randomSpeed = originalSpeed;
-    lastUsed = "";
+
+    if(lastUsed != "reverse")
+      lastUsed = "";
+
     activeItem = false;
   }
 
   // every half tick after level 4, place a random item on the screen
-  if((score > levels[4] || difficulty >= 4) && score % halftick == 0 && !activeItem && items.length == 0) {
-    randomItem(pickRandom(effects, 1)[0]);
+  if((score > levels[4] || difficulty >= 2) && items.length < 1) {
+    if(score % halftick == 0 && !activeItem) {
+      randomItem(pickRandom(effects, 1)[0]);
+    } else if(score % halftick / 2 == 0) {
+      randomItem("point");
+    }
   }
 }
 
@@ -259,16 +292,19 @@ function reversal(level) {
 
   // freeze the blocks in place
   if(score == level - halftick / 2) {
-    gap = 28;
-    if(difficulty < 3) {
+    if(difficulty < 3 && score > levels[10]) {
+      gap = 28;
       height_limiter = .5;
     }
+
     for(i in blocks) {
-      if(difficulty < 4) {
-        blocks[i].speed = randomSpeed * -1 - 10;
-      } else {
-        blocks[i].speed = randomSpeed * -1 - 14;
-      }
+      flip(blocks[i]);
+
+      blocks[i].speed = randomSpeed * 1.4;
+    }
+    
+    if(lastUsed == "reverse") {
+      lastUsed = "";
     }
   }
 }

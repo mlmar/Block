@@ -21,8 +21,10 @@ var overlayBlack = document.getElementById("overlayBlack");
 var overlay = document.getElementById("overlay");
 
 // bottom labels
-var labelSore = document.getElementById("labelScore");
+var labelScore = document.getElementById("labelScore");
+var labelBonus = document.getElementById("labelBonus");
 var labelLevel = document.getElementById("labelLevel");
+var labelTotal = document.getElementById("labelTotal");
 
 // colors
 const TRANSPARENT = "rgba(255, 255, 255, 0)";
@@ -47,6 +49,8 @@ const AQUA_T = "rgba(0,241,200,.3)";
 const DARK_BLUE = "rgb(0, 61, 158)";
 const LIME = "rgb(58, 255, 95)";
 const YELLOW = "rgb(255, 204, 102)";
+const PINKISH = "rgb(252, 3, 194)";
+const GRAY = "rgb(156, 156, 156)";
 const PLAYER_YELLOW = "rgb(255, 204, 20)";
 
 const colors = [ORANGE, GREEN, PINK, AQUA];
@@ -87,7 +91,7 @@ var default_speed = 3; // defualt speed for random block movement
 var default_height_limiter // default height limit for random blocks
 
 var difficulty = 0 // modified by settings
-const difficulties = ["!","!!","!!!","!!!!","?????"];
+const difficulties = ["original","!!","i wanted to release it like this","!!!!","?????"];
 
 // stacks for generation of random items and random blockss
 var items = []; // random items
@@ -102,6 +106,7 @@ var height_limiter = default_height_limiter // dictate maximum height of random 
 var time = 0; // increment time by 1 every game loop
 var gap = default_gap; // gap between generations of a random block
 var score = 0; // keeping track of score -- dictates level
+var bonus = 0; // bonus score
 var level = 1; // every "mutliplier", level increases
 
 // setting the score distance between each level
@@ -185,25 +190,38 @@ function drawBlock(b) {
   }
 }
 
-// check the state of the oldest block -- the first block
+// check if block is out of frame then delete
 function deleteOutOfFrame(first) {
   switch(first.state) {
     case direction.UP:
       if(first.y2 < 0)
-        blocks.shift();
+        blocks.shift()
       break;
     case direction.DOWN:
       if(first.y > canvas.height)
-        blocks.shift();
+        blocks.shift()
       break;
     case direction.LEFT:
       if(first.x2 < 0)
-        blocks.shift();
+        blocks.shift()
       break;
     case direction.RIGHT:
       if(first.x > canvas.width)
-        blocks.shift();
+        blocks.shift()
       break;
+  }
+}
+
+// flip a block in the other direction
+function flip(block) {
+  if(block.state == direction.UP) {
+      block.state = direction.DOWN;
+  } else if(block.state == direction.DOWN) {
+      block.state = direction.UP;
+  } else if(block.state == direction.RIGHT) {
+      block.state = direction.LEFT;
+  } else if(block.state == direction.LEFT) {
+      block.state = direction.RIGHT;
   }
 }
 
@@ -384,7 +402,7 @@ function clutter() {
 
 /***************************** ITEM METHODS *****************************/
 
-var effects = ["slow", "clear", "life"];
+var effects = ["slow", "slow", "clear", "clear", "life","reverse"];
 // create a randomItem
 function randomItem(state) {
   var MAX_X = canvas.width / BLOCK_SIZE;
@@ -403,6 +421,12 @@ function randomItem(state) {
     case "life":
       item = new Block(RANDOM_X, RANDOM_Y, BLOCK_SIZE, BLOCK_SIZE, YELLOW)
       break;
+    case "point":
+      item = new Block(RANDOM_X, RANDOM_Y, BLOCK_SIZE, BLOCK_SIZE, PINKISH);
+      break;
+    case "reverse":
+      item = new Block(RANDOM_X, RANDOM_Y, BLOCK_SIZE, BLOCK_SIZE, GRAY);
+      break;
   }
 
   item.state = state;
@@ -411,7 +435,7 @@ function randomItem(state) {
 }
 
 // method to consume an item
-function useItem(block) {
+function useItem(block, playerBlock = false) {
   originalScore = score;
   activeItem = true;
 
@@ -422,23 +446,34 @@ function useItem(block) {
       for(i in blocks) { // modify all existing speeds
         blocks[i].speed = randomSpeed;
       }
+      activeItem = true;
+      bonus++;
       break;
     case "clear":
       for(i in blocks) {
         blocks[i].collide = false; // turn of collision for existing blocks
         blocks[i].color = colorMatch(blocks[i].color); // transparent blocks
       }
+      activeItem = true;
+      bonus++;
       break;
     case "life":
       player.state = "life";
       player.color = PLAYER_YELLOW;
       break;
+    case "point":
+      bonus += 3;
+      break;
+    case "reverse":
+      activeItem = true;
+      bonus += 5;
+      break;
   }
-
-  activeItem = true;
-  lastUsed = block.state;
-
+  
+  if(!playerBlock)
+    lastUsed = block.state;
   items.pop();
+
 }
 
 
@@ -457,12 +492,13 @@ function update() {
     moveRandom(blocks[i]);
     drawBlock(blocks[i]);
 
-    if(blocks[i].collide && collision(player, blocks[i]) && !cheat) {
+    if(blocks[i].collide && collision(player, blocks[i]) && !ex20) {
       if(player.state == "life") {
         blocks[i].collide = false;
         blocks[i].color = colorMatch(blocks[i].color);
         player.state = "";
         player.color = BLUE;
+        labelBonus.classList.remove("label-bonus");
       } else {
         console.log("Stop");
         stop();
@@ -482,13 +518,16 @@ function update() {
     }
   }
 
+  // delete oldest block
+  if(blocks.length > 0)
+    deleteOutOfFrame(blocks[0]);
+
+  labelBonus.innerText = "bonus: " + bonus;
+
   // only create a block every tick
   // 1 tick = time % gap;
   if(time++ % gap == 0)
     updateTick();
-
-  if(blocks.length > 0)
-    deleteOutOfFrame(blocks[0]) // clear oldest block when ready
 }
 
 
@@ -496,6 +535,7 @@ function update() {
 
 // break the game loop and log the score
 function stop() {
+  labelTotal.innerText = "final Score: " + (bonus + score - 1);
   playing = false;
   console.log("Score: " + score);
   overlay.classList.add("popup-open");
@@ -510,19 +550,10 @@ function reset() {
   for(i in blocks) {
     if(difficulty < 4) {
       blocks[i].state = direction.DOWN;
-      blocks[i].speed = 16;
     } else {
-      if(blocks[i].state == direction.DOWN) 
-        blocks[i].state = direction.UP;
-      else if(blocks[i].state == direction.UP)
-        blocks[i].state = direction.DOWN;
-      else if(blocks[i].state == direction.LEFT)
-        blocks[i].state = direction.RIGHT;
-      else if(blocks[i].state == direction.RIGHT)
-        blocks[i].state = direction.LEFT;
-
-      blocks[i].speed = 16;
+      flip(blocks[i]);
     }
+    blocks[i].speed = 16; 
   }
 
   window.requestAnimationFrame(transition);
@@ -536,7 +567,7 @@ function transition() {
       moveRandom(blocks[i]);
       drawBlock(blocks[i]);
     } 
-
+    
     deleteOutOfFrame(blocks[0]);
     window.requestAnimationFrame(transition);
   } else {
@@ -564,13 +595,15 @@ function resetValues() {
   time = 0;
   gap = default_gap;
   score = 0;
+  bonus = 0
   level = 1;
+
+  labelTotal.innerText = "";
 
   referencePoint = 0;
   lastUsed = "";
 
   buffer = 0;
-
 
   update(); // update with new board
 }

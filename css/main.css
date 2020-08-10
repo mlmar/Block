@@ -75,7 +75,7 @@ footer {
 
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 1rem;
   width: 100%;
 }
@@ -89,6 +89,11 @@ footer {
 
 .label-black {
   color: white !important;
+}
+
+.label-bonus {
+  color: rgb(255, 204, 20) !important;
+  transition: color 1s linear;
 }
 
 .label-level {
@@ -106,7 +111,7 @@ footer {
 }
 
 .popup-top {
-  margin-top: 20vh !important;
+  margin-top: 25% !important;
 }
 
 .settings {

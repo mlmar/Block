@@ -15,6 +15,11 @@ function settings(force = false) {
 slider.onchange = function(event) {
   difficulty = parseFloat(slider.value);
   labelDif.innerText = "Difficulty: " + difficulties[difficulty];
+  if(difficulty == 0) {
+    labelDif.style.color = WHITE;
+  } else {
+    labelDif.style.color = colors[difficulty - 1];
+  }
   console.log(difficulty);
 }
 
@@ -58,7 +63,7 @@ function setDifficulty() {
     case 4:
       default_speed = 8;
       default_gap = 16;
-      default_height_limiter = .8;
+      default_height_limiter = .95;
       canvas.width = 820;
   }
 }
