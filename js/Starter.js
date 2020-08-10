@@ -40,25 +40,25 @@ function setDifficulty() {
     case 1:
       default_speed = 5;
       default_gap = 29;
-      default_height_limiter = .7;
+      default_height_limiter = .8;
       canvas.widdth = 500;
       break;
     case 2:
       default_speed = 6;
       default_gap = 26;
-      default_height_limiter = .6;
+      default_height_limiter = .8;
       canvas.width = 500;
       break;
     case 3:
       default_speed = 6;
       default_gap = 20;
-      default_height_limiter = .5;
+      default_height_limiter = .8;
       canvas.width = 500;
       break;
     case 4:
-      default_speed = 7;
-      default_gap = 23;
-      default_height_limiter = .3;
+      default_speed = 8;
+      default_gap = 16;
+      default_height_limiter = .8;
       canvas.width = 820;
   }
 }

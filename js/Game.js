@@ -339,10 +339,12 @@ function pickRandom(list, amount) {
 
 // create a random block with speed and direction (velocity)
 function randomBlock(speed, state) {
-  var MAX_AMOUNT = canvas.width / BLOCK_SIZE;
+  var MAX_AMOUNT_X = canvas.width / BLOCK_SIZE;
+  var MAX_AMOUNT_Y = canvas.height / BLOCK_SIZE
   var MAX_HEIGHT = canvas.height * height_limiter;
 
-  var RANDOM_X = Math.floor(Math.random() * MAX_AMOUNT) * BLOCK_SIZE;
+  var RANDOM_X = Math.floor(Math.random() * MAX_AMOUNT_X) * BLOCK_SIZE;
+  var RANDOM_Y = Math.floor(Math.random() * MAX_AMOUNT_Y) * BLOCK_SIZE;
   var RANDOM_HEIGHT = Math.floor((Math.random() * MAX_HEIGHT) + canvas.height * .1);
 
   var block;
@@ -355,10 +357,10 @@ function randomBlock(speed, state) {
       block = new Block(RANDOM_X, 0 - RANDOM_HEIGHT, BLOCK_SIZE, RANDOM_HEIGHT, PINK);
       break;
     case direction.LEFT: // blocks generate to the right of the screen
-      block = new Block(canvas.width + RANDOM_HEIGHT, RANDOM_X, RANDOM_HEIGHT, BLOCK_SIZE, GREEN);
+      block = new Block(canvas.width + RANDOM_HEIGHT, RANDOM_Y, RANDOM_HEIGHT, BLOCK_SIZE, GREEN);
       break;
     case direction.RIGHT: // blocks geenerate to the left of the screen
-      block = new Block(0 - RANDOM_HEIGHT, RANDOM_X, RANDOM_HEIGHT, BLOCK_SIZE, ORANGE);
+      block = new Block(0 - RANDOM_HEIGHT, RANDOM_Y, RANDOM_HEIGHT, BLOCK_SIZE, ORANGE);
       break;
   }
 

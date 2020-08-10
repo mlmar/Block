@@ -39,7 +39,6 @@ function updateTick() {
 // random events for max difficulty
 
 function randomOne() {
-  
   randomBlock(randomSpeed, randomDirections[0]);
 }
 
@@ -60,20 +59,26 @@ function maxDifficulty() {
   }
 
   if(score > levels[1] && score < levels[4]) {
-    if(score == levels[1] + 1)
-      randomDirections = pickRandom(directions, 2);
-      
-    randomTwo();
-  }
-
-  if(score > levels[4] && score < levels[8]) {
-    if(score == levels[4] + 1)
+    if(score == levels[1] + 1) {
       randomDirections = pickRandom(directions, 3);
-
+      randomSpeed++;
+    }
+    
+    reversal(levels[2]);
     randomThree();
   }
 
-  if(score > levels[8] && score < levels[12]) {
+  if(score > levels[4] && score < levels[8]) {
+    if(score == levels[4] + 1) {
+      randomDirections = pickRandom(directions, 3);
+      randomSpeed++;
+    }
+    
+    reversal(levels[5]);
+    randomThree();
+  }
+
+  if(score > levels[8]) {
     clutter();
   }
 }
@@ -255,9 +260,15 @@ function reversal(level) {
   // freeze the blocks in place
   if(score == level - halftick / 2) {
     gap = 28;
-    height_limiter = .5;
+    if(difficulty < 3) {
+      height_limiter = .5;
+    }
     for(i in blocks) {
-      blocks[i].speed = randomSpeed * -1 - 10;
+      if(difficulty < 4) {
+        blocks[i].speed = randomSpeed * -1 - 10;
+      } else {
+        blocks[i].speed = randomSpeed * -1 - 14;
+      }
     }
   }
 }
