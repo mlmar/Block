@@ -1,6 +1,6 @@
 /***************************** BLOCK GAME *****************************/
 
-var cheat = false; // set this to true to cheat
+var ex20 = false;
 
 // page elements
 var canvas = document.getElementById("canvas");
