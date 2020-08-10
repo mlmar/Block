@@ -67,6 +67,7 @@
   min-height: fit-content;
   min-width: fit-content;
   box-shadow: 0 0 1rem .2rem rgba(0,0,0,.5);
+  /* padding-right:  0; */
 }
 
 .popup-fill {

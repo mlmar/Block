@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> Block 2.2 </title>
+    <title> Block 2.5 </title>
 
     <link rel="stylesheet" href="css/Popup.css"></link>
     <link rel="stylesheet" href="css/main.css"></link>
@@ -16,11 +16,10 @@
       <holder class="holder">
         
         <div class="holder-secondary" id="holderSecondary">
-          <div class="title">
-            <label class="label title"> block 2.2 </label>
+          <div class="top">
+            <label class="label title"> block 2.5 </label>
+            <label class="label esc"> esc for settings </label>
           </div>
-
-
 
           <canvas width="500" height="500" class="canvas" id="canvas"> </canvas>
 
@@ -33,25 +32,39 @@
 
         </div>
 
+        <!-- SETTINGS -->
+        <div class="popup popup-center popup-closed" id="overlaySettings">
+          <div class="popup-contents settings"> 
+          
+            <p class="popup-label label-settings" id="disclaimer"> </p>
+
+            <div class="popup-label panels">
+              <p class="list popup-label" id="list"> </p>
+
+              <div>
+                <label id="labelDif"> Difficulty: ! </label>
+                <input type="range" min="0" max="4" value="0" class="slider" id="slider"> </input>
+              </div>
+
+            </div>
+            
+          </div>
+        </div>
+
+        <!-- PRESS SPACE -->
         <div class="overlay popup popup-top popup-open" id="overlay">
           <div class="overlay popup-contents"> 
             <label class="label-overlay" id="labelOverlay"> press space to start </label>
           </div>
         </div>
 
+        <!-- BLACK -->
         <div class="overlay popup popup-center popup-closed" id="overlayBlack">
           <div class="overlay popup-contents"> 
             <label class="label-overlay label-black"> don't panic </label>
           </div>
         </div>
 
-        <div class="popup popup-center popup-closed" id="overlaySettings">
-          <div class="popup-contents settings"> 
-            <label class="popup-label"> don't panic </label>
-          </div>
-        </div>
-
-        <div value="src/scores.txt"> </div>
 
       </div>
 
@@ -59,9 +72,14 @@
       </footer>
 
     </div>
-
+    
+    <script src="text/text.js"></script>
     <script src="js/Game.js"></script>
+    <script src="js/Levels.js"></script>
+    <script src="js/Starter.js"></script>
 
   </body>
+
+
 
 </html>

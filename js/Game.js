@@ -5,12 +5,23 @@ var cheat = false; // set this to true to cheat
 // page elements
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
-var labelSore = document.getElementById("labelScore");
 
+
+// settings elements
 var overlaySettings = document.getElementById("overlaySettings");
+var disclaimer = document.getElementById("disclaimer");
+var list = document.getElementById("list");
+var slider = document.getElementById("slider");
+var labelDif = document.getElementById("labelDif");
+
+// black screen fade for level 9-10
 var overlayBlack = document.getElementById("overlayBlack");
+
+// press space to start
 var overlay = document.getElementById("overlay");
-var labelOverlay = document.getElementById("labelOverlay");
+
+// bottom labels
+var labelSore = document.getElementById("labelScore");
 var labelLevel = document.getElementById("labelLevel");
 
 // colors
@@ -38,6 +49,8 @@ const LIME = "rgb(58, 255, 95)";
 const YELLOW = "rgb(255, 204, 102)";
 const PLAYER_YELLOW = "rgb(255, 204, 20)";
 
+const colors = [ORANGE, GREEN, PINK, AQUA];
+
 // match the regular colors to their transparent counterparts
 function colorMatch(c) {
   switch(c) {
@@ -59,25 +72,37 @@ function colorMatch(c) {
 var clear_color = WHITE; // canvas background should be white
 
 // general block information
-var BLOCK_SIZE = 20; // arbitrary
-var STARTING_XY = (canvas.height / 2) - (BLOCK_SIZE / 2); // center of the page
+const BLOCK_SIZE = 20; // arbitrary
+var STARTING_X = (canvas.width / 2) - (BLOCK_SIZE / 2); // center of the page
+var STARTING_Y = (canvas.height / 2) - (BLOCK_SIZE / 2); // center of the page
 
 var player; // will be initialized as a Block object in the reset() function
 var playing = false; // true if game is in play
 var PLAYER_COLOR = BLUE; // default player color
 
+
+// variables that directly effect difficutly
+var default_gap = 32; // default delay between each block generation
+var default_speed = 3; // defualt speed for random block movement
+var default_height_limiter // default height limit for random blocks
+
+var difficulty = 0 // modified by settings
+const difficulties = ["!","!!","!!!","!!!!","?????"];
+
 // stacks for generation of random items and random blockss
 var items = []; // random items
 var blocks = []; // random blocks
-var randomSpeed = 3; // base speed for random blocks
-var randomDirections; // random directions for random blocks
-var height_limiter = .8 // dictate maximum height of random blocks in proportion to canvas height
+var randomSpeed = default_speed; // base speed for random blocks
+var randomDirections = []; // random directions for random blocks
+
+var height_limiter = default_height_limiter // dictate maximum height of random blocks in proportion to canvas height
+
 
 // dynamic game control variables
-var time; // increment time by 1 every game loop
-var gap; // gap between generations of a random block
-var score; // keeping track of score -- dictates level
-var level; // every "mutliplier", level increases
+var time = 0; // increment time by 1 every game loop
+var gap = default_gap; // gap between generations of a random block
+var score = 0; // keeping track of score -- dictates level
+var level = 1; // every "mutliplier", level increases
 
 // setting the score distance between each level
 //  call setLevelTick before starting
@@ -95,19 +120,18 @@ var activeItem;
 var originalSpeed; // used to return to original speed
 var originalScore; // used to meassure when a halftick has passed
 
-
-const ESCAPE = 27;
-const SPACE = 32;
+const ESCAPE = "Escape";
+const SPACE = "Space";
 // direction enum keycodes
 const direction = { 
-  UP : 38,
-  DOWN : 40,
-  LEFT : 37,
-  RIGHT : 39,
-  W: 87,
-  S: 83,
-  A: 65,
-  D: 68
+  UP : "ArrowUp",
+  DOWN : "ArrowDown",
+  LEFT : "ArrowLeft",
+  RIGHT : "ArrowRight",
+  W: "KeyW",
+  S: "KeyS",
+  A: "KeyA",
+  D: "KeyD"
 }
 const directions = [direction.UP, direction.DOWN, direction.LEFT, direction.RIGHT];
 
@@ -117,7 +141,7 @@ const directions = [direction.UP, direction.DOWN, direction.LEFT, direction.RIGH
 //                    and only run on the first press
 var buffer = 0; 
 
-/***************************** PRIMARY METHODS *****************************/
+/***************************** BLOCK CLASS *****************************/
 
 // Block object for player and blocks
 //  params: position x, position y, height, width, color
@@ -142,10 +166,12 @@ var Block = function(x, y, width, height, color) {
   this.text = "";
 }
 
+/***************************** RENDERING METHODS *****************************/
+
 // clear canvas
 function clear() {
   ctx.fillStyle = clear_color;
-  ctx.fillRect(0, 0, canvas.height, canvas.width);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 // draw a block on the page
@@ -158,6 +184,30 @@ function drawBlock(b) {
     ctx.fillText(b.text, b.x, b.y, b.width);
   }
 }
+
+// check the state of the oldest block -- the first block
+function deleteOutOfFrame(first) {
+  switch(first.state) {
+    case direction.UP:
+      if(first.y2 < 0)
+        blocks.shift();
+      break;
+    case direction.DOWN:
+      if(first.y > canvas.height)
+        blocks.shift();
+      break;
+    case direction.LEFT:
+      if(first.x2 < 0)
+        blocks.shift();
+      break;
+    case direction.RIGHT:
+      if(first.x > canvas.width)
+        blocks.shift();
+      break;
+  }
+}
+
+/***************************** MOVEMENT METHODS *****************************/
 
 // move in the direction 
 function move(key) {
@@ -194,9 +244,9 @@ function move(key) {
 
 // get currently pressed key and pass it to the move function
 window.onkeydown = function(event) {
-  var key = event.keyCode;
+  var key = event.code;
 
-  if(playing) {
+  if(playing) { // only detect movement keys inputted while playing
     move(key);
   } else if(!playing && (key == SPACE)) { // space bar to start game
     if(buffer == 0) { // only run on the first space press
@@ -208,6 +258,7 @@ window.onkeydown = function(event) {
   }
 }
 
+// move the blocks based on their direction and speed
 function moveRandom(block) {
   switch(block.state) {
     case direction.UP:
@@ -228,27 +279,9 @@ function moveRandom(block) {
   blocks[i].x2 = blocks[i].x + blocks[i].width;
 }
 
-// check the state of the oldest block -- the first block
-function deleteOutOfFrame(first) {
-  switch(first.state) {
-    case direction.UP:
-      if(first.y2 < 0)
-        blocks.shift();
-      break;
-    case direction.DOWN:
-      if(first.y > canvas.height)
-        blocks.shift();
-      break;
-    case direction.LEFT:
-      if(first.x2 < 0)
-        blocks.shift();
-      break;
-    case direction.RIGHT:
-      if(first.x > canvas.width)
-        blocks.shift();
-      break;
-  }
-}
+
+/***************************** DETECTION METHODS *****************************/
+
 
 // see if a smaller block is on top of another block
 function collision(b1, b2) {
@@ -280,6 +313,7 @@ function collision(b1, b2) {
   return collision;
 }
 
+/***************************** GENERATION METHODS *****************************/
 
 // get a random nubmer between min and max, min inclusive
 function getRandom(min, max) {
@@ -303,9 +337,50 @@ function pickRandom(list, amount) {
   return generated;
 }
 
-/***************************** GAME FLOW *****************************/
+// create a random block with speed and direction (velocity)
+function randomBlock(speed, state) {
+  var MAX_AMOUNT = canvas.width / BLOCK_SIZE;
+  var MAX_HEIGHT = canvas.height * height_limiter;
 
-/****** item methods ******/
+  var RANDOM_X = Math.floor(Math.random() * MAX_AMOUNT) * BLOCK_SIZE;
+  var RANDOM_HEIGHT = Math.floor((Math.random() * MAX_HEIGHT) + canvas.height * .1);
+
+  var block;
+  
+  switch(state) {
+    case direction.UP: // blocks generate below the screen
+      block = new Block(RANDOM_X, canvas.height + RANDOM_HEIGHT, BLOCK_SIZE, RANDOM_HEIGHT, AQUA);
+      break;
+    case direction.DOWN: // blocks generate above the screen
+      block = new Block(RANDOM_X, 0 - RANDOM_HEIGHT, BLOCK_SIZE, RANDOM_HEIGHT, PINK);
+      break;
+    case direction.LEFT: // blocks generate to the right of the screen
+      block = new Block(canvas.width + RANDOM_HEIGHT, RANDOM_X, RANDOM_HEIGHT, BLOCK_SIZE, GREEN);
+      break;
+    case direction.RIGHT: // blocks geenerate to the left of the screen
+      block = new Block(0 - RANDOM_HEIGHT, RANDOM_X, RANDOM_HEIGHT, BLOCK_SIZE, ORANGE);
+      break;
+  }
+
+  if(difficulty >= 4)
+    block.color = pickRandom(colors, 1)[0];
+  
+  block.speed = speed;
+  block.state = state;
+
+  blocks.push(block);
+}
+
+// send random blocks from all four directions
+function clutter() {
+  randomBlock(randomSpeed, direction.UP);
+  randomBlock(randomSpeed, direction.DOWN);
+  randomBlock(randomSpeed, direction.LEFT);
+  randomBlock(randomSpeed, direction.RIGHT);
+}
+
+
+/***************************** ITEM METHODS *****************************/
 
 var effects = ["slow", "clear", "life"];
 // create a randomItem
@@ -364,280 +439,11 @@ function useItem(block) {
   items.pop();
 }
 
-/****** end item methods ******/
 
-// create a random block with speed and direction (velocity)
-function randomBlock(speed, state) {
-  var MAX_AMOUNT = canvas.width / BLOCK_SIZE;
-  var MAX_HEIGHT = canvas.height * height_limiter;
-
-  var RANDOM_X = Math.floor(Math.random() * MAX_AMOUNT) * BLOCK_SIZE;
-  var RANDOM_HEIGHT = Math.floor((Math.random() * MAX_HEIGHT) + canvas.height * .1);
-
-  var block;
-  
-  switch(state) {
-    case direction.UP: // blocks generate below the screen
-      block = new Block(RANDOM_X, canvas.height + RANDOM_HEIGHT, BLOCK_SIZE, RANDOM_HEIGHT, AQUA);
-      break;
-    case direction.DOWN: // blocks generate above the screen
-      block = new Block(RANDOM_X, 0 - RANDOM_HEIGHT, BLOCK_SIZE, RANDOM_HEIGHT, PINK);
-      break;
-    case direction.LEFT: // blocks generate to the right of the screen
-      block = new Block(canvas.width + RANDOM_HEIGHT, RANDOM_X, RANDOM_HEIGHT, BLOCK_SIZE, GREEN);
-      break;
-    case direction.RIGHT: // blocks geenerate to the left of the screen
-      block = new Block(0 - RANDOM_HEIGHT, RANDOM_X, RANDOM_HEIGHT, BLOCK_SIZE, ORANGE);
-      break;
-  }
-  
-  block.speed = speed;
-  block.state = state;
-
-  blocks.push(block);
-}
-
-// send random blocks from all four directions
-function clutter() {
-  randomBlock(randomSpeed, direction.UP);
-  randomBlock(randomSpeed, direction.DOWN);
-  randomBlock(randomSpeed, direction.LEFT);
-  randomBlock(randomSpeed, direction.RIGHT);
-}
-
-// call this update once every tick
-function updateTick() {
-  
-  /******* levels 1-4 *******/
-
-  // up then down then left then right
-  if(score > levels[0] && score < levels[1]) {
-    randomBlock(randomSpeed, direction.DOWN);
-  }
-  if(score > levels[1] && score < levels[2]) {
-    randomBlock(randomSpeed, direction.UP);
-  }
-  if(score > levels[2] && score < levels[3]) {
-    randomBlock(randomSpeed, direction.LEFT);
-  }
-  if(score > levels[3] && score < levels[4]) {
-    randomBlock(randomSpeed, direction.RIGHT);
-  }
-
-  /******* level 4-7 *******/
-
-  // pick two different random directions for each level
-  if(score >= levels[4] && score % tick == 0) {
-    console.log("Random directions @ " + score);
-    randomDirections = pickRandom(directions, 2);
-  }
-
-  // generate the random blocks with the randomly directions
-  if(score > levels[4] && score < levels[8]) {
-    randomBlock(randomSpeed, randomDirections[0]);
-    randomBlock(randomSpeed, randomDirections[1]);
-  }
-
-
-  /******* levels 8-10 *******/
-
-  // levels 8-10, blocks from all four directions
-  if(score > levels[8] && score < levels[9]) {
-    clutter()
-  }
-
-  // slow down all the blocks since it will be coming from all foru directions
-  if(score == levels[8]) {
-    gap = 32;
-    randomSpeed--;
-  }
-
-  /******* use level 9 to transition to dark mode *******/
-  // this control continues until level 14
-  if(score >= levels[9]) {
-    dark();
-  }
-
-  /******* levels 10+ *******/
-
-  // wait a little bit before going into the next phase
-  var blockThreshold = levels[10] - halftick;
-
-  if(score == blockThreshold) {
-    var textBlock = new Block(canvas.width, canvas.height/2, 800, 80, WHITE);
-    textBlock.state = direction.LEFT;
-    textBlock.text = 'hey. thanks for playing, good luck. -marcus';
-    textBlock.speed = 5;
-    textBlock.collide = false;
-    blocks.push(textBlock);
-  }
-
-  // lower number of pieces but faster speed
-  if(score == levels[10]) {
-    gap = 44;
-    randomSpeed += 10;
-  }
- 
-  // programmed levels after 10
-  if(score > blockThreshold) {
-    infinite(levels[10]);
-  }
-  
-  /******* level 14+ loop infinitely *******/
-
-  if(score == levels[14]) {
-    referencePoint = score;
-  }
-
-  if(score > levels[14]) {
-    // continuously update the reference point so the same actions
-    // repeat every 4 ticks
-    if(score == referencePoint + tick * 4) {
-      referencePoint = score;
-      gap--;
-      randomSpeed++;
-    }
-
-    infinite(referencePoint);
-  }
-
-
-  /******* speed handler *******/
-  speedHandler();
-
-  /******* random items *******/
-  itemHandler();
-
-  /******* score and level labels *******/
-  labelHandler();
-}
-
-function speedHandler() {
-  // !!! increment the speed every 4 levels until 
-  if(score < levels[16] && score % (tick * 4) == 0) {
-    console.log("Speed increase");
-    randomSpeed++;
-  }
-}
-
-function itemHandler() {
-  // disable random items for a half tick after activation
-  //  disable effects of previous item after a half tick
-  if(originalScore + halftick == score) {
-    if(lastUsed == "slow")
-      randomSpeed = originalSpeed;
-    lastUsed = "";
-    activeItem = false;
-  }
-
-  // every half tick after level 4, place a random item on the screen
-  if(score > levels[4] && score % halftick == 0 && !activeItem && items.length == 0) {
-    randomItem(pickRandom(effects, 1)[0]);
-  }
-}
-
-function labelHandler() {
-  if(score % tick == 0) {
-    labelLevel.innerText = "Level: " + level++;
-  }
-
-  // finally, update the score label
-  labelScore.innerText = "Score: " + score++;
-
-}
-
-
-// SPECIAL GAME FUNCTIONS AFTER LEVEL 10
-//  all level events will now be in terms of half tick to speed up the game
-function dark() {
-  // this fades the screen at level 9 and changes to the black pallete
-  if(score == levels[9]) {
-    document.body.classList.add("darken");
-    canvas.classList.add("transparent");
-
-    // make sure the player doesn't panic
-    overlayBlack.classList.toggle("popup-open");
-    overlayBlack.classList.toggle("popup-closed");
-    
-    blocks = []; // delete all the blocks
-
-    // after 1 second, turn off the panic message and clear the board
-    setTimeout(function() {
-      overlayBlack.classList.toggle("popup-open");
-      overlayBlack.classList.toggle("popup-closed");
-      clear(); // clear the board
-    },1000);
-
-    // put the player on the board
-    drawBlock(player);
-  }
-
-  // bring the canvas back into view
-  if(score == levels[9] + tick * .15) {
-    canvas.classList.remove("transparent");
-    clear_color = BLACK;
-  } 
-}
-
-// stop all blocks in place and then reverse them
-function reversal(level) {
-  // slow down all the blocks for a quarter tick
-  if(score > level - halftick && score < level - halftick / 2) {
-    clutter();
-    for(i in blocks) {
-      blocks[i].speed *= .4; 
-    }
-  }
-
-  // freeze the blocks in place
-  if(score == level - halftick / 2) {
-    gap = 28;
-    height_limiter = .5;
-    for(i in blocks) {
-      blocks[i].speed = randomSpeed * -1 - 10;
-    }
-  }
-}
-
-
-
-// this will loop infinitely after level 9
-function infinite(level) {
-  var level2 = level + tick; // relative to level 11
-  var level3 = level + tick * 2; // relative to level 12
-  var level4 = level + tick * 3; // relative to level 13
-  var level5 = level + tick * 4; // relative to level 14
-  
-  if(score == level + 1)
-    console.log("Starting infinite segment for " + level);
-
-  if(score > level && score < level2 - halftick) {
-      randomBlock(randomSpeed, direction.UP);
-    }
-  if(score > level2 - halftick && score < level2) {
-    randomBlock(randomSpeed, direction.LEFT);
-  }
-  if(score > level2 && score < level3 - halftick) {
-    randomBlock(randomSpeed, direction.DOWN);
-  }
-  if(score > level3 - halftick && score < level3) {
-    randomBlock(randomSpeed, direction.RIGHT);
-  }
-
-  if(score > level3 && score < level4 - halftick) {
-    clutter();
-  }
-
-  if(score > level3)
-    reversal(level4); // some quick magic to wow the players
-
-  if(score > level4 && score < level5) {
-    clutter();
-  }
-
-  if(score == level4)
-    console.log("Ending segment for " + level);
-}
+/***************************** RUNS EVERY GAME LOOP *****************************/
+// update the state of the board
+// check for collisions
+// calls updateTick every tick
 
 // update the page with new positions of all blocks
 function update() {
@@ -683,6 +489,7 @@ function update() {
     deleteOutOfFrame(blocks[0]) // clear oldest block when ready
 }
 
+
 /***************************** GAME CONTROL *****************************/
 
 // break the game loop and log the score
@@ -695,6 +502,31 @@ function stop() {
 
 
 
+// game reset
+//  initiate the reset transition
+function reset() {
+  for(i in blocks) {
+    if(difficulty < 4) {
+      blocks[i].state = direction.DOWN;
+      blocks[i].speed = 16;
+    } else {
+      if(blocks[i].state == direction.DOWN) 
+        blocks[i].state = direction.UP;
+      else if(blocks[i].state == direction.UP)
+        blocks[i].state = direction.DOWN;
+      else if(blocks[i].state == direction.LEFT)
+        blocks[i].state = direction.RIGHT;
+      else if(blocks[i].state == direction.RIGHT)
+        blocks[i].state = direction.LEFT;
+
+      blocks[i].speed = 16;
+    }
+  }
+
+  window.requestAnimationFrame(transition);
+}
+
+// reset transition to new game
 function transition() {
   if(blocks.length > 0) {
     clear();
@@ -710,31 +542,25 @@ function transition() {
   }
 }
 
-// game reset
-//  initializer and default dynamic variables
-//  reset random blocks
-function reset() {
-  for(i in blocks) {
-    blocks[i].state = direction.DOWN;
-    blocks[i].speed = 16;
-  }
-
-  window.requestAnimationFrame(transition);
-}
-
+// reset all the game values to its defaults
 function resetValues() {
   clear(); // clear the board
 
+  setDifficulty();
+
+  STARTING_X = (canvas.width / 2) - (BLOCK_SIZE / 2); // center of the page
+  STARTING_Y = (canvas.height / 2) - (BLOCK_SIZE / 2); // center of the page
+
   // reset all dynamic variables to defaults
   clear_color = WHITE;
-  player = new Block(STARTING_XY, STARTING_XY, BLOCK_SIZE, BLOCK_SIZE, PLAYER_COLOR);
+  player = new Block(STARTING_X, STARTING_Y, BLOCK_SIZE, BLOCK_SIZE, PLAYER_COLOR);
   items = [];
   blocks = [];
-  randomSpeed = 3;
+  randomSpeed = default_speed;
   randomDirections = [];
-  height_limiter = .8
+  height_limiter = default_height_limiter
   time = 0;
-  gap = 32;
+  gap = default_gap;
   score = 0;
   level = 1;
 
@@ -743,21 +569,27 @@ function resetValues() {
 
   buffer = 0;
 
+
   update(); // update with new board
 }
 
 // start the game loop
 function start() {
-  console.log("Starting game " + blocks);
-
-  playing = true;
   resetValues();
+  
+  console.log("Starting game @ ");
+  console.log(" default_speed: " + default_speed);
+  console.log(" default_gap: " + default_gap);
   
   overlay.classList.remove("popup-open");
   overlay.classList.add("popup-closed");
   document.body.classList.remove("darken");
   canvas.classList.remove("transparent");
+
+  settings(true);
   
+  playing = true;
+
   window.requestAnimationFrame(gameLoop);
 }
 
@@ -770,25 +602,3 @@ function gameLoop() {
   if(playing)
     window.requestAnimationFrame(gameLoop);
 }
-
-/***************************** CUSTOMIZE *****************************/
-
-// increment between each level
-function setLevelTick(n) {
-  tick = n;
-  halftick = n / 2;
-  for(i = 0; i < MAX_LEVEL_AMOUNT; i++) {
-    levels[i] = i * n;
-  }
-  console.log(levels);
-}
-
-function settings() {
-  overlaySettings.classList.toggle("popup-open");
-  overlaySettings.classList.toggle("popup-closed");
-}
-
-
-cheat = false;
-resetValues();
-setLevelTick(20);
