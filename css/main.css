@@ -9,7 +9,7 @@ html, body {
 
 .darken {
   background: black;
-  transition: background 1s linear !important;
+  transition: background .5s linear !important;
   color: white !important;
 }
 
@@ -80,6 +80,7 @@ footer {
   width: 100%;
 }
 
+
 .label {
   background: none;
   font-family: impact !important;
@@ -94,6 +95,10 @@ footer {
 .label-bonus {
   color: rgb(255, 204, 20) !important;
   transition: color 1s linear;
+}
+
+.label-center {
+  text-align: center;
 }
 
 .label-level {

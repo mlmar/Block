@@ -1,5 +1,5 @@
 general =
-  "github pages are static so I can't auto add your high score. just send them to me if you want. if the game break, refresh"
+  "github pages are static so I can't auto add your high scores. just try to beat ivan and send me them if you want. refresh when the game breaks."
 
 scoreList = [
   "ivan: 287",

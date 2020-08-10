@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> Block 2.56 </title>
+    <title> Block 2.e </title>
 
     <link rel="stylesheet" href="css/Popup.css"></link>
     <link rel="stylesheet" href="css/main.css"></link>
@@ -17,7 +17,7 @@
         
         <div class="holder-secondary" id="holderSecondary">
           <div class="top">
-            <label class="label title"> block 2.56 </label>
+            <label class="label title"> block 2.e </label>
             <label class="label esc"> esc for settings </label>
           </div>
 
@@ -26,31 +26,13 @@
           <div class="menu">
             <div class="menu-grid">
               <label class="label" id="labelScore"> score: 0 </label>
-              <label class="label" id="labelBonus"> bonus: 0 </label>
+              <label class="label label-center" id="labelBonus"> bonus: 0 </label>
               <label class="label label-level" id="labelLevel"> level: 1 </label>
             </div>
           </div>
 
         </div>
 
-        <!-- SETTINGS -->
-        <div class="popup popup-center popup-closed" id="overlaySettings">
-          <div class="popup-contents settings"> 
-          
-            <p class="popup-label label-settings" id="disclaimer"> </p>
-
-            <div class="popup-label panels">
-              <p class="list popup-label" id="list"> </p>
-
-              <div>
-                <label id="labelDif"> Difficulty: ! </label>
-                <input type="range" min="0" max="4" value="0" class="slider" id="slider"> </input>
-              </div>
-
-            </div>
-            
-          </div>
-        </div>
 
         <!-- PRESS SPACE -->
         <div class="overlay popup popup-top popup-open" id="overlay">
@@ -63,10 +45,28 @@
         <!-- BLACK -->
         <div class="overlay popup popup-center popup-closed" id="overlayBlack">
           <div class="overlay popup-contents"> 
-            <label class="label-overlay label-black"> don't panic </label>
+            <label class="label-overlay label-black"> </label>
           </div>
         </div>
 
+        <!-- SETTINGS -->
+        <div class="popup popup-center popup-closed" id="overlaySettings">
+          <div class="popup-contents settings"> 
+          
+            <p class="popup-label label-settings" id="disclaimer"> </p>
+
+            <div class="popup-label panels">
+              <p class="list popup-label" id="list"> </p>
+
+              <div>
+                <label id="labelMode"> Mode: ! </label>
+                <input type="range" min="0" max="4" value="0" class="slider" id="slider"> </input>
+              </div>
+
+            </div>
+            
+          </div>
+        </div>
 
       </div>
 
@@ -76,8 +76,14 @@
     </div>
     
     <script src="text/text.js"></script>
+    
     <script src="js/Game.js"></script>
+
     <script src="js/Levels.js"></script>
+    <script src="js/levels/standard.js"></script>
+    <script src="js/levels/diagonal.js"></script>
+    <script src="js/levels/max.js"></script>
+
     <script src="js/Starter.js"></script>
 
   </body>

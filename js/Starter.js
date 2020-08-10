@@ -13,14 +13,14 @@ function settings(force = false) {
 }
 
 slider.onchange = function(event) {
-  difficulty = parseFloat(slider.value);
-  labelDif.innerText = "Difficulty: " + difficulties[difficulty];
-  if(difficulty == 0) {
+  mode = parseFloat(slider.value);
+  labelDif.innerText = "mode: " + modes[mode];
+  if(mode == 0) {
     labelDif.style.color = WHITE;
   } else {
-    labelDif.style.color = colors[difficulty - 1];
+    labelDif.style.color = colors[mode - 1];
   }
-  console.log(difficulty);
+  console.log(mode);
 }
 
 
@@ -34,8 +34,8 @@ function setLevelTick(n) {
   console.log(levels);
 }
 
-function setDifficulty() {
-  switch(difficulty) {
+function setMode() {
+  switch(mode) {
     case 0:
       default_speed = 3; // defaults
       default_gap = 32; // defaults
@@ -62,8 +62,8 @@ function setDifficulty() {
       break;
     case 4:
       default_speed = 8;
-      default_gap = 16;
-      default_height_limiter = .95;
+      default_gap = 17;
+      default_height_limiter = .8;
       canvas.width = 820;
   }
 }
@@ -81,3 +81,6 @@ list.innerText = text;
 // DEFAULT STARTER CODE: LEVEL TICK LOWER THAN 20 WILL BREAK THE GAME
 resetValues();
 setLevelTick(20);
+
+
+startScreen();

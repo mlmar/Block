@@ -1,6 +1,6 @@
 /***************************** BLOCK GAME *****************************/
 
-var ex20 = false;
+var ex20 = true;
 
 // page elements
 var canvas = document.getElementById("canvas");
@@ -12,7 +12,7 @@ var overlaySettings = document.getElementById("overlaySettings");
 var disclaimer = document.getElementById("disclaimer");
 var list = document.getElementById("list");
 var slider = document.getElementById("slider");
-var labelDif = document.getElementById("labelDif");
+var labelDif = document.getElementById("labelMode");
 
 // black screen fade for level 9-10
 var overlayBlack = document.getElementById("overlayBlack");
@@ -90,8 +90,8 @@ var default_gap = 32; // default delay between each block generation
 var default_speed = 3; // defualt speed for random block movement
 var default_height_limiter // default height limit for random blocks
 
-var difficulty = 0 // modified by settings
-const difficulties = ["original","!!","i wanted to release it like this","!!!!","?????"];
+var mode = 0 // modified by settings
+const modes = ["release","!!","original","!!!!","experimental"];
 
 // stacks for generation of random items and random blockss
 var items = []; // random items
@@ -144,7 +144,10 @@ const directions = [direction.UP, direction.DOWN, direction.LEFT, direction.RIGH
 //            will cal lthe reset method multiple times
 // BAND AID SOLUTION: count how many times space was pressed in a buffer
 //                    and only run on the first press
-var buffer = 0; 
+var buffer = 0;
+
+
+var screen = true; 
 
 /***************************** BLOCK CLASS *****************************/
 
@@ -185,7 +188,7 @@ function drawBlock(b) {
   if(b.text == "") {
     ctx.fillRect(b.x, b.y, b.width, b.height);
   } else {
-    ctx.font = "3rem Impact"
+    ctx.font = !screen ? "3rem Impact" : "1rem Impact";
     ctx.fillText(b.text, b.x, b.y, b.width);
   }
 }
@@ -382,7 +385,7 @@ function randomBlock(speed, state) {
       break;
   }
 
-  if(difficulty >= 4)
+  if(mode >= 4)
     block.color = pickRandom(colors, 1)[0];
   
   block.speed = speed;
@@ -548,7 +551,7 @@ function stop() {
 //  initiate the reset transition
 function reset() {
   for(i in blocks) {
-    if(difficulty < 4) {
+    if(mode < 4) {
       blocks[i].state = direction.DOWN;
     } else {
       flip(blocks[i]);
@@ -579,7 +582,7 @@ function transition() {
 function resetValues() {
   clear(); // clear the board
 
-  setDifficulty();
+  setMode();
 
   STARTING_X = (canvas.width / 2) - (BLOCK_SIZE / 2); // center of the page
   STARTING_Y = (canvas.height / 2) - (BLOCK_SIZE / 2); // center of the page
@@ -595,7 +598,7 @@ function resetValues() {
   time = 0;
   gap = default_gap;
   score = 0;
-  bonus = 0
+  bonus = 0;
   level = 1;
 
   labelTotal.innerText = "";
@@ -636,4 +639,30 @@ function gameLoop() {
   // request animation will call a funciton when screen is ready for next repaint
   if(playing)
     window.requestAnimationFrame(gameLoop);
+}
+
+function startScreen() {
+    var item1 = new Block(STARTING_X - 140, STARTING_Y + 40, BLOCK_SIZE, BLOCK_SIZE, DARK_BLUE);
+    var item2 = new Block(STARTING_X - 140, STARTING_Y + 40*2, BLOCK_SIZE, BLOCK_SIZE, LIME);
+    var item3 = new Block(STARTING_X - 140, STARTING_Y + 40*3, BLOCK_SIZE, BLOCK_SIZE, YELLOW)
+    var item4 = new Block(STARTING_X - 140, STARTING_Y + 40*4, BLOCK_SIZE, BLOCK_SIZE, GRAY);
+    var item5 = new Block(STARTING_X - 140, STARTING_Y + 40*5, BLOCK_SIZE, BLOCK_SIZE, PINKISH);
+
+    var text1 = new Block(STARTING_X - 60, STARTING_Y + 56, 800, BLOCK_SIZE, DARK_BLUE);
+    var text2 = new Block(STARTING_X - 60, STARTING_Y + 96, 800, BLOCK_SIZE, LIME);
+    var text3 = new Block(STARTING_X - 60, STARTING_Y + 136, 800, BLOCK_SIZE, YELLOW)
+    var text4 = new Block(STARTING_X - 60, STARTING_Y + 176, 800, BLOCK_SIZE, GRAY);
+    var text5 = new Block(STARTING_X - 60, STARTING_Y + 216, 800, BLOCK_SIZE, PINKISH);
+
+    text1.text = "slows down blocks for a short time";
+    text2.text = "existing blocks become transparent";
+    text3.text = "extra life, doesn't stack";
+    text4.text = "reversal"
+    text5.text = "bonus points"
+
+    blocks = [item1, item2, item3, item4, item5, text1, text2, text3, text4, text5]
+    for(i in blocks) {
+      drawBlock(blocks[i]);
+    }
+    screen = true;
 }
