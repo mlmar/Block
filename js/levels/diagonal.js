@@ -6,38 +6,33 @@ function diagonal() {
   var level_5 = tick * 5;
   var level_8 = tick * 8;
 
+
+  alert("not yet");
+  stop();
+
   if(score >= 0 && score < level_1) {
-    topLeft(score);
+    topRight(0);
   }
+
+
 }
-
-function topLeft(level_n) {
-  var pos = Math.floor((canvas.width / level_n);
-  var half = canvas.height / 2;
-
-  var blockTop = new Block(pos, 0 - half, BLOCK_SIZE, half, PINK);
-  blockTop.speed = randomSpeed;
-  blockTop.state = direction.DOWN;
-  blocks.push(blockTop);
-  
-  var blockSide = new Block(0 - half, pos, half, BLOCK_SIZE, PINK);
-  blockSide.speed = randomSpeed;
-  blockSide.state = direction.DOWN;
-  blocks.push(blockSide);
-}
-
 
 function topRight(level_n) {
-  var pos = Math.floor((score - level_n) * 40);
-  var half = canvas.height / 2;
+  var pos = Math.floor(canvas.width - score * 40);
+  var half = canvas.height *  1.25;
 
   var blockTop = new Block(pos, 0 - half, BLOCK_SIZE, half, PINK);
   blockTop.speed = randomSpeed;
   blockTop.state = direction.DOWN;
   blocks.push(blockTop);
+
+  var blockTop2 = new Block(pos + canvas.width, 0 - half, BLOCK_SIZE, half, PINK);
+  blockTop2.speed = randomSpeed;
+  blockTop2.state = direction.DOWN;
+  blocks.push(blockTop2);
   
-  var blockSide = new Block(0 - half, pos, half, BLOCK_SIZE, PINK);
+  var blockSide = new Block(canvas.width + half, pos, half, BLOCK_SIZE, GREEN);
   blockSide.speed = randomSpeed;
-  blockSide.state = direction.DOWN;
+  blockSide.state = direction.LEFT;
   blocks.push(blockSide);
 }

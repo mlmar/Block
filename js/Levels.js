@@ -3,7 +3,7 @@
 // call this update once every tick
 function updateTick() {
   
-  if(mode == 0 || mode == 1 || mode == 2 || mode == 3) { // basic progression for levels 1-10, 14+
+  if(mode == 0 || mode == 2 || mode == 3) { // basic progression for levels 1-10, 14+
     
     if(score < tick * 4)
       fourSingle(0); // START AT 0: level 1-4
@@ -18,8 +18,8 @@ function updateTick() {
       precursor(); // set up for infinite level generation
       infinite(tick * 10);
     }
-//   } else if(mode == 1) {
-//     diagonal();
+  } else if(mode == 1) {
+    diagonal();
   } else if(mode == 4) { // wide screen, faster blocks, three sides, generateLoop
     maxMode();
   }

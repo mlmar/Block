@@ -81,6 +81,4 @@ list.innerText = text;
 // DEFAULT STARTER CODE: LEVEL TICK LOWER THAN 20 WILL BREAK THE GAME
 resetValues();
 setLevelTick(20);
-
-
 startScreen();

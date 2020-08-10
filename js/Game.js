@@ -1,6 +1,6 @@
 /***************************** BLOCK GAME *****************************/
 
-var ex20 = true;
+var ex20 = false;
 
 // page elements
 var canvas = document.getElementById("canvas");
@@ -614,6 +614,8 @@ function resetValues() {
 // start the game loop
 function start() {
   resetValues();
+
+  screen = false;
   
   console.log("Starting game @ ");
   console.log(" default_speed: " + default_speed);
@@ -659,10 +661,11 @@ function startScreen() {
     text3.text = "extra life, doesn't stack";
     text4.text = "reversal"
     text5.text = "bonus points"
+    
 
     blocks = [item1, item2, item3, item4, item5, text1, text2, text3, text4, text5]
     for(i in blocks) {
+      blocks[i].state = direction.DOWN;
       drawBlock(blocks[i]);
     }
-    screen = true;
 }
