@@ -1,5 +1,26 @@
-/***************************** TRANSITIONS FOR ORIGINAL MODE *****************************/
+/***************************** FLOW FOR ORIGINAL MODE *****************************/
+
+function original() {
+  if(score > 0 && score < tick * 4)
+    fourSingle(0); // START AT 0: level 1-4
+
+  if(score < tick * 8)
+    fourDouble(tick * 4, true) // level 5-8
+
+  if(score < tick * 10)
+    levelTransition(); // level 9-10: clutter() to dark mode
+
+  if(score > tick * 10 - halftick) {
+    precursor(); // set up for infinite level generation
+    infinite(tick * 10);
+  }
+}
+
+
+
 // transitions used from levels 8-10
+
+
 
 // Transition to dark mode from level 8 to 9
 function levelTransition() {

@@ -1,3 +1,12 @@
+* {
+  font-family: Impacto, Impact, sans-serif;
+}
+
+@font-face {
+  font-family: Impacto;
+  font-weight: bold;
+}
+
 html {
   background: none !important;
 }
@@ -5,6 +14,7 @@ html {
 html, body {
   height: 100%;
   overflow: hidden;
+  margin: 0;
 }
 
 .darken {
@@ -34,6 +44,7 @@ nav {
   width: 100%;
   justify-content: center;
   align-items: center;
+
 }
 
 .holder-secondary {
@@ -83,7 +94,7 @@ footer {
 
 .label {
   background: none;
-  font-family: impact !important;
+/*   font-family: impact !important; */
   font-size: 2rem;
   text-transform: lowercase;
 }
@@ -109,7 +120,7 @@ footer {
 
 .overlay {
   background: none !important;
-  font-family: impact;
+/*   font-family: impact; */
   font-size: 2rem;
   box-shadow: none;
   pointer-events: none !important;

@@ -1,15 +1,6 @@
 /***************************** EVENTS FOR MAX MODE *****************************/
 
 
-
-
-function randomThree() {
-  randomBlock(randomSpeed, randomDirections[0]);
-  randomBlock(randomSpeed, randomDirections[1]);
-  randomBlock(randomSpeed, randomDirections[2]);
-}
-
-
 // for a special mode
 function maxMode() {
   var level_1 = tick;
@@ -30,11 +21,12 @@ function maxMode() {
     textBlock.speed = 5;
     textBlock.collide = false;
     blocks.push(textBlock);
+    freeLife();
   }
   
 
   if(score >= level_1 && score < level_4) {
-    if(score == level_1) {
+    if(score % tick == 0) {
       randomDirections = pickRandom(directions, 3);
       //randomSpeed++;
     }

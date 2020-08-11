@@ -5,27 +5,16 @@ function updateTick() {
   
   if(mode == 0 || mode == 2 || mode == 3) { // basic progression for levels 1-10, 14+
     
-    if(score < tick * 4)
-      fourSingle(0); // START AT 0: level 1-4
-    
-    if(score < tick * 8)
-      fourDouble(tick * 4) // level 5-8
-     
-    if(score < tick * 10)
-      levelTransition(); // level 9-10: clutter() to dark mode
-    
-    if(score > tick * 10 - halftick) {
-      precursor(); // set up for infinite level generation
-      infinite(tick * 10);
-    }
+    original();
+
+    speedHandler(); //speed handler only applies to the original type modes
   } else if(mode == 1) {
-    diagonal();
+    cluster();
   } else if(mode == 4) { // wide screen, faster blocks, three sides, generateLoop
     maxMode();
   }
 
-  /******* handlers for speed, items and labels *******/
-  speedHandler();
+  /******* handlers for items and labels *******/
   itemHandler();
   labelHandler();
 }
@@ -37,8 +26,9 @@ function updateTick() {
 // increase the speed every 4 levels
 function speedHandler() {
   // !!! increment the speed every 4 levels until 
-  if(score < levels[16] && score % (tick * 4) == 0) {
+  if(score < (tick * 16) && score % (tick * 4) == 0 && score > 0) {
     console.log("Speed increase");
+
     randomSpeed++;
   }
 }
@@ -49,10 +39,12 @@ function itemHandler() {
   // disable random items for a half tick after activation
   //  disable effects of previous item after a half tick
 
-  if((bonus % 4 == 0 ||  bonus % 7 == 0) && bonus > 0) {
+  if((bonus % 4 == 0 ||  bonus % 7 == 0 || bonus % 11 == 0) && bonus > 0) {
+    if(player.state != "life")
+      labelBonus.classList.add("label-bonus");
+
     bonus++;
     player.state = "life";
-    labelBonus.classList.add("label-bonus");
     useItem(player, true);
   }
   
@@ -71,8 +63,8 @@ function itemHandler() {
   }
 
   // every half tick after level 4, place a random item on the screen
-  if((score > levels[4] || mode == 4) && items.length < 1) {
-    if(score % halftick == 0 && !activeItem) {
+  if((score > (tick * 4) || mode == 4 || mode == 1) && items.length < 1) {
+    if((score % halftick == 0 || mode == 4) && !activeItem) {
       randomItem(pickRandom(effects, 1)[0]);
     } else if(score % halftick / 2 == 0) {
       randomItem("point");
@@ -102,10 +94,13 @@ function dark(level_n) {
     document.body.classList.add("darken");
     canvas.classList.add("transparent");
 
-    // make sure the player doesn't panic
+    //make sure the player doesn't panic
     overlayBlack.classList.toggle("popup-open");
     overlayBlack.classList.toggle("popup-closed");
     
+    //if(mode != 4)
+    //  canvas.width = 640;
+
     blocks = []; // delete all the blocks
     
     clear(); // clear the board
@@ -153,7 +148,7 @@ function fourSingle(level_n) {
 }
 
 // FOUR CONSUCUTIVE LEVELS: generate blocks going in two different directions
-function fourDouble(level_n) {
+function fourDouble(level_n, lasers = false) {
   var level_5 = level_n + tick * 4;
    
   // level change can be checked detected by checking if score divides the tick evenly
@@ -168,6 +163,20 @@ function fourDouble(level_n) {
     randomBlock(randomSpeed, randomDirections[0]);
     randomBlock(randomSpeed, randomDirections[1]);
   }
+
+  if(lasers) {
+    if(score % (halftick / 2) == 0 && score <= tick * 7) {
+      randomLaser(randomDirections[0]);
+      randomLaser(randomDirections[1]);
+    }
+  }
+}
+
+
+function randomThree() {
+  randomBlock(randomSpeed, randomDirections[0]);
+  randomBlock(randomSpeed, randomDirections[1]);
+  randomBlock(randomSpeed, randomDirections[2]);
 }
 
 // initiates looped level generation starting from level_n
@@ -195,8 +204,10 @@ function generateLoop(level_n) {
   var level_c = level_n + tick * 3; 
   var level_d = level_n + tick * 4;
   
-  if(score == level_n)
+  if(score == level_n) {
     console.log("Starting looped segment @ " + level_n);
+    bonus++;
+  }
 
   if(score > level_n && score < level_a - halftick)
     randomBlock(randomSpeed, direction.UP);
@@ -220,8 +231,10 @@ function generateLoop(level_n) {
   if(score >= level_c && score < level_d)
     clutter();
 
-  if(score == level_d - 1)
+  if(score == level_d - 1) {
     console.log("Ending looped segment @ " + level_n);
+    freeLife();
+  }
 }
 
 // stop all blocks in place and then reverse them
@@ -230,20 +243,18 @@ function reversal(level) {
   if(score > level - halftick && score < level - halftick / 2) {
     clutter();
     for(i in blocks) {
-      blocks[i].speed *= .4; 
+      if(blocks[i].collide)
+        blocks[i].speed *= .4; 
     }
   }
 
   // freeze the blocks in place
   if(score == level - halftick / 2) {
-    if(mode != 4 && score > levels[10]) {
-      gap = 28;
-      height_limiter = .5;
-    }
 
+    // flip the block directions and apply new speed
     for(i in blocks) {
-      flip(blocks[i]);
-
+      if(blocks[i].collide)
+        flip(blocks[i]);
       blocks[i].speed = randomSpeed * 1.4;
     }
     
@@ -251,4 +262,67 @@ function reversal(level) {
       lastUsed = "";
     }
   }
+}
+
+// create a random laser using the laser function
+function randomLaser(blockDirection) {
+  var MAX_AMOUNT_X = canvas.width / BLOCK_SIZE;
+  var MAX_AMOUNT_Y = canvas.height / BLOCK_SIZE
+  var MAX_HEIGHT = canvas.height * height_limiter;
+
+  var RANDOM_X = Math.floor(Math.random() * MAX_AMOUNT_X) * BLOCK_SIZE;
+  var RANDOM_Y = Math.floor(Math.random() * MAX_AMOUNT_Y) * BLOCK_SIZE;
+  var RANDOM_HEIGHT = Math.floor((Math.random() * MAX_HEIGHT) + canvas.height * .1);
+
+  if(blockDirection == direction.UP || blockDirection == direction.DOWN) {
+    laser(blockDirection, RANDOM_X);
+  } else if(blockDirection == direction.LEFT || blockDirection == direction.RIGHT) {
+    laser(blockDirection, RANDOM_Y);
+  }
+}
+
+// determine a direction and a position to shoot a "laser" in
+function laser(blockDirection, position) {
+  var placeholder;
+  var block;
+
+  var randomColor = pickRandom(colors,1)[0];
+  var randomTransparent = colorMatch(randomColor);
+
+  var extended_width = canvas.width * randomSpeed * 1.15;
+  var extended_height = canvas.height * randomSpeed * 1.15;
+
+  switch(blockDirection) {
+    case direction.UP:  
+      placeholder = new Block(position, canvas.height, BLOCK_SIZE, extended_height, randomTransparent);
+      block = new Block(position, extended_height + canvas.height, BLOCK_SIZE, canvas.height, randomColor);
+      break;
+    case direction.DOWN:  
+      placeholder = new Block(position, 0 - extended_height, BLOCK_SIZE, extended_height, randomTransparent);
+      block = new Block(position, 0 - extended_height - canvas.height, BLOCK_SIZE, canvas.height, randomColor);
+      break;
+    case direction.LEFT:
+      placeholder = new Block(canvas.width, position, extended_width, BLOCK_SIZE, randomTransparent);
+      block = new Block(extended_width + canvas.width, position, canvas.width, BLOCK_SIZE, randomColor);
+      break;
+    case direction.RIGHT:
+      placeholder = new Block(0 - extended_width, position, extended_width, BLOCK_SIZE, randomTransparent);
+      block = new Block(0 - extended_width - canvas.width, position, canvas.width, BLOCK_SIZE, randomColor);
+      break;
+  }
+
+  placeholder.speed = randomSpeed * randomSpeed + 10;
+  placeholder.state = blockDirection;
+  placeholder.collide = false;
+  block.speed = randomSpeed * randomSpeed + 10;
+  block.state = blockDirection;
+
+  blocks.push(placeholder);
+  blocks.push(block);
+}
+
+function freeLife() {
+  console.log("Free life @ " + score);
+  player.state = "life";
+  player.color = PLAYER_YELLOW;
 }

@@ -28,10 +28,6 @@ slider.onchange = function(event) {
 function setLevelTick(n) {
   tick = n >= 20 ? n : 20;
   halftick = n / 2;
-  for(i = 0; i < MAX_LEVEL_AMOUNT; i++) {
-    levels[i] = i * n;
-  }
-  console.log(levels);
 }
 
 function setMode() {
@@ -43,25 +39,25 @@ function setMode() {
       canvas.width = 500;
       break;
     case 1:
-      default_speed = 5;
-      default_gap = 29;
-      default_height_limiter = .8;
-      canvas.widdth = 500;
+      default_speed = 4;
+      default_gap = 32;
+      default_height_limiter = .6;
+      canvas.width = 500;
       break;
     case 2:
-      default_speed = 6;
+      default_speed = 7;
       default_gap = 26;
       default_height_limiter = .8;
       canvas.width = 500;
       break;
     case 3:
-      default_speed = 6;
+      default_speed = 8;
       default_gap = 20;
       default_height_limiter = .8;
       canvas.width = 500;
       break;
     case 4:
-      default_speed = 8;
+      default_speed = 9;
       default_gap = 17;
       default_height_limiter = .8;
       canvas.width = 820;
@@ -79,6 +75,7 @@ list.innerText = text;
 
 
 // DEFAULT STARTER CODE: LEVEL TICK LOWER THAN 20 WILL BREAK THE GAME
+
 resetValues();
 setLevelTick(20);
 startScreen();

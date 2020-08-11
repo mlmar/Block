@@ -1,7 +1,5 @@
 /***************************** BLOCK GAME *****************************/
 
-var ex20 = false;
-
 // page elements
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -91,7 +89,7 @@ var default_speed = 3; // defualt speed for random block movement
 var default_height_limiter // default height limit for random blocks
 
 var mode = 0 // modified by settings
-const modes = ["release","!!","original","!!!!","experimental"];
+const modes = ["original","experimental 1","version one","placeholder","experimental 2"];
 
 // stacks for generation of random items and random blockss
 var items = []; // random items
@@ -101,6 +99,7 @@ var randomDirections = []; // random directions for random blocks
 
 var height_limiter = default_height_limiter // dictate maximum height of random blocks in proportion to canvas height
 
+var ex20 = false;
 
 // dynamic game control variables
 var time = 0; // increment time by 1 every game loop
@@ -111,10 +110,8 @@ var level = 1; // every "mutliplier", level increases
 
 // setting the score distance between each level
 //  call setLevelTick before starting
-var MAX_LEVEL_AMOUNT = 16; // preprogrammedd levels 0-14
 var tick; // score in between each level
 var halftick; // half a tick
-var levels = [] // each level is i * tick
 
 var referencePoint; // will be used to calculate elapsed time for infinite runs
 
@@ -164,7 +161,7 @@ var Block = function(x, y, width, height, color) {
   this.height = height;
   
 
-  this.speed = 20; // default speed
+  this.speed = BLOCK_SIZE; // default speed
 
   this.color = color;
   this.state; // block state
@@ -182,9 +179,10 @@ function clear() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-// draw a block on the page
+// draw a block on the page if it is on screen
 function drawBlock(b) {
   ctx.fillStyle = b.color;
+
   if(b.text == "") {
     ctx.fillRect(b.x, b.y, b.width, b.height);
   } else {
@@ -266,7 +264,10 @@ function move(key) {
 // get currently pressed key and pass it to the move function
 window.onkeydown = function(event) {
   var key = event.code;
+  action(key);
+}
 
+function action(key) {
   if(playing) { // only detect movement keys inputted while playing
     move(key);
   } else if(!playing && (key == SPACE)) { // space bar to start game
@@ -354,12 +355,12 @@ function pickRandom(list, amount) {
 
     generated.push(item);
   }
-  console.log("Randomly generated " + list + ":\n" + generated);
+  console.log("Randomly generated from " + list);
   return generated;
 }
 
 // create a random block with speed and direction (velocity)
-function randomBlock(speed, state) {
+function randomBlock(speed, state, randomColor = false) {
   var MAX_AMOUNT_X = canvas.width / BLOCK_SIZE;
   var MAX_AMOUNT_Y = canvas.height / BLOCK_SIZE
   var MAX_HEIGHT = canvas.height * height_limiter;
@@ -385,7 +386,7 @@ function randomBlock(speed, state) {
       break;
   }
 
-  if(mode >= 4)
+  if(randomColor || mode == 4 || mode == 1)
     block.color = pickRandom(colors, 1)[0];
   
   block.speed = speed;
@@ -508,7 +509,7 @@ function update() {
       }
     }
     
-    if(items.length > 0 && collision(items[0], blocks[i]))
+    if(items.length > 0 && collision(items[0], blocks[i]) && blocks[i].collide)
       items.pop();
   }
 
@@ -551,10 +552,12 @@ function stop() {
 //  initiate the reset transition
 function reset() {
   for(i in blocks) {
-    if(mode < 4) {
-      blocks[i].state = direction.DOWN;
-    } else {
-      flip(blocks[i]);
+    if(blocks[i].collide) {
+      if(mode != 4 && mode != 1) {
+        blocks[i].state = direction.DOWN;
+      } else if(mode == 4) {
+        flip(blocks[i]);
+      }
     }
     blocks[i].speed = 16; 
   }
@@ -660,7 +663,7 @@ function startScreen() {
     text2.text = "existing blocks become transparent";
     text3.text = "extra life, doesn't stack";
     text4.text = "reversal"
-    text5.text = "bonus points"
+    text5.text = "bonus, sometimes gives you extra life"
     
 
     blocks = [item1, item2, item3, item4, item5, text1, text2, text3, text4, text5]
