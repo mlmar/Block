@@ -21,10 +21,9 @@
     font-size: 1vh;
     align-items: center;
     width: 100%;
-
     font-weight: 750;
-    touch-action: manipulation;
-    -webkit-touch-callout: none;
+    touch-action: manipulation !important;
+    user-select:none;
   }
 
   nav {
@@ -54,6 +53,7 @@
     align-items: center;
     max-width: 100%;
     margin-left: -2px;
+    touch-action: manipulation;
   }
 
   /* settings */
@@ -92,15 +92,16 @@
 
   .mobile-controls {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     grid-gap: 1vh;
     position: fixed;
-    top: 65vh;
+    top: 70vh;
     left: 0;
-    height: 16vh;
+    height: 18vh;
     width: 100%;
     background: none;
     opacity: .3;
+    touch-action: manipulation;
   }
 
   .control-btn {
@@ -109,13 +110,14 @@
     ouch-action: manipulation;
     outline: none;
     background: linear-gradient(#747474, #212121);
+    touch-action: manipulation;
   }
 
   .btn-up {
     grid-row-start: 1;
     grid-row-end: 1;
-    grid-column-start: 4;
-    grid-column-end: 4;
+    grid-column-start: 3;
+    grid-column-end: 3;
 
     height: 100%;
   }
@@ -123,8 +125,8 @@
   .btn-left {
     grid-row-start: 2;
     grid-row-end: 2;
-    grid-column-start: 3;
-    grid-column-end: 3;
+    grid-column-start: 2;
+    grid-column-end: 2;
 
     height: 100%;
   }
@@ -132,8 +134,8 @@
   .btn-right {
     grid-row-start: 2;
     grid-row-end: 2;
-    grid-column-start: 5;
-    grid-column-start: 5;
+    grid-column-start: 4;
+    grid-column-start: 4;
 
     height: 100%;
   }
@@ -141,8 +143,8 @@
   .btn-down {
     grid-row-start: 3;
     grid-row-end: 3;
-    grid-column-start: 4;
-    grid-column-end: 4;
+    grid-column-start: 3;
+    grid-column-end: 3;
 
     height: 100%;
   }
