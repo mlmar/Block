@@ -1,34 +1,30 @@
 var btnSettings = document.getElementById("btnSettings");
 btnSettings.ontouchend = function(event) {
-  settings();
+  action(ESCAPE)
 }
 
 var btnStart = document.getElementById("btnStart");
-btnStart.ontouchstart = function(event) {
-  reset();
+btnStart.ontouchend = function(event) {
+  action(SPACE);
 }
+
 
 var btnUp = document.getElementById("btnUp");
-btnUp.ontouchstart = function(event) {
-  action(direction.UP);
-}
-
-var btnDown = document.getElementById("btnDown");
-btnDown.ontouchstart = function(event) {
-  action(direction.DOWN);
-}
-
 var btnLeft = document.getElementById("btnLeft");
-btnLeft.ontouchstart = function(event) {
-  action(direction.LEFT);
-}
-
 var btnRight = document.getElementById("btnRight");
-btnRight.ontouchstart = function(event) {
-  action(direction.RIGHT);
-}
+var btnDown = document.getElementById("btnDown");
 
-btnUp.onclick = function(event) { event.preventDefault() }
-btnDown.onclick = function(event) { event.preventDefault() }
-btnLeft.onclick = function(event) { event.preventDefault() }
-btnRight.onclick = function(event) { event.preventDefault() }
+
+btnUp.addEventListener("touchstart", function() { action(direction.UP); } );
+btnLeft.addEventListener("touchstart", function() { action(direction.LEFT); } );
+btnRight.addEventListener("touchstart", function() { action(direction.RIGHT); } );
+btnDown.addEventListener("touchstart", function() { action(direction.DOWN); } );
+
+
+
+// using fastclick.js library to bypass 300ms click delay in safari standalone 
+if ('addEventListener' in document) {
+  document.addEventListener('DOMContentLoaded', function() {
+    FastClick.attach(document.body);
+  }, false);
+}
