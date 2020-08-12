@@ -23,7 +23,13 @@ btnLeft.ontouchstart = function(event) {
   action(direction.LEFT);
 }
 
-btnRight = document.getElementById("btnRight");
+var btnRight = document.getElementById("btnRight");
 btnRight.ontouchstart = function(event) {
   action(direction.RIGHT);
 }
+
+
+btnUp.onclick = function(event) { console.log(event) }
+btnDown.onclick = function(event) { console.log(event) }
+btnLeft.onclick = function(event) { console.log(event) }
+btnRight.onclick = function(event) { console.log(event) }
