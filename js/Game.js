@@ -7,15 +7,15 @@ var ctx = canvas.getContext("2d");
 
 var mobile = window.matchMedia("only screen and (min-width: 320px) and (max-width: 768px) and (orientation: portrait)").matches
 console.log("Mobile Device: " + mobile);
-canvas.height = mobile ? 700 : 500;
+canvas.height = mobile ? 620 : 500;
 
 var iPhoneX = window.matchMedia("only screen and (min-height : 812px) and (orientation: portrait)").matches
 console.log("iPhone X: " + iPhoneX);
-canvas.height = iPhoneX && mobile ? 860 : canvas.height;
+canvas.height = iPhoneX && mobile ? 780 : canvas.height;
 
 var mobileControls = document.getElementById("mobileControls");
 var mobilePrimary = document.getElementById("mobilePrimary");
-mobileControls.style.height = iPhoneX && mobile ? "170vw" : mobilePrimary.style.height;
+mobileControls.style.height = iPhoneX && mobile ? "163vw" : mobilePrimary.style.height;
 
 
 // settings elements
