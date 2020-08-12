@@ -7,14 +7,15 @@ var ctx = canvas.getContext("2d");
 
 var mobile = window.matchMedia("only screen and (min-width: 320px) and (max-width: 768px) and (orientation: portrait)").matches
 console.log("Mobile Device: " + mobile);
-canvas.height = mobile ? 780 : 500;
+canvas.height = mobile ? 700 : 500;
 
 var iPhoneX = window.matchMedia("only screen and (min-height : 812px) and (orientation: portrait)").matches
 console.log("iPhone X: " + iPhoneX);
-canvas.height = iPhoneX && mobile ? 950 : canvas.height;
+canvas.height = iPhoneX && mobile ? 860 : canvas.height;
 
 var mobileControls = document.getElementById("mobileControls");
 var mobilePrimary = document.getElementById("mobilePrimary");
+mobileControls.style.height = iPhoneX && mobile ? "170vw" : mobilePrimary.style.height;
 
 
 // settings elements
@@ -198,7 +199,11 @@ function drawBlock(b) {
   if(b.text == "") {
     ctx.fillRect(b.x, b.y, b.width, b.height);
   } else {
-    ctx.font = !screen ? "3rem Impact" : "1rem Impact";
+    if(!mobile) {
+      ctx.font = !screen ? "3rem Impact" : "1rem Impact";
+    } else {
+      ctx.font = !screen? "5vh Arial" : "2vh Arial";
+    }
     ctx.fillText(b.text, b.x, b.y, b.width);
   }
 }
