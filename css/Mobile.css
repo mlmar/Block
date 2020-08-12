@@ -23,6 +23,7 @@
     width: 100%;
 
     font-weight: 750;
+    touch-action: manipulation;
   }
 
   nav {
@@ -89,6 +90,7 @@
     width: 100%;
     opacity: .1;
     background: none;
+    grid-gap: 0;
   }
 
   .control-btn {
