@@ -60,7 +60,8 @@ function setMode() {
       default_speed = 9;
       default_gap = 17;
       default_height_limiter = .8;
-      canvas.width = 820;
+      if(!mobile)
+        canvas.width = 820;
   }
 }
 

@@ -1,5 +1,14 @@
 /********************************** popup css **********************************/
 
+@media only screen 
+  and (-webkit-min-device-pixel-ratio: 2) 
+  and (max-width: 768px) 
+  and (min-width: 320px) 
+  and (orientation: portrait) {
+
+}
+
+
 /* indicate what layer (div) popup should display in */
 .popup {
   display: flex;
@@ -7,8 +16,11 @@
   height: 100%;
   width: 100%;
   z-index: 1;
-  pointer-events: none;
+  pointer-events: none !important;
   margin: auto;
+  position: fixed;
+  top: 0;
+  left: 0
 }
 
 
@@ -44,7 +56,6 @@
   visibility: visible;
   opacity: 1;
   transition: opacity .2s linear;
-  pointer-events: all;
 }
 
 /* closing animation */

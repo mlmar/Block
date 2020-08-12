@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title> Block 2.eight </title>
+    <title> Block 2.nine </title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
     <link rel="stylesheet" href="css/Popup.css"></link>
     <link rel="stylesheet" href="css/main.css"></link>
+    <link rel="stylesheet" href="css/Mobile.css"></link>
   </head>
 
   <body>
@@ -15,14 +18,16 @@
 
       <holder class="holder">
         
+        <!-- GAME CONTAINER  -->
         <div class="holder-secondary" id="holderSecondary">
           <div class="top">
-            <label class="label title"> block 2.eight </label>
+            <label class="label title"> block 2.nine </label>
             <label class="label esc"> esc for settings </label>
           </div>
-
+          
           <canvas width="500" height="500" class="canvas" id="canvas"> </canvas>
 
+          <!-- MENU -->
           <div class="menu">
             <div class="menu-grid">
               <label class="label" id="labelScore"> score: 0 </label>
@@ -31,41 +36,12 @@
             </div>
           </div>
 
-        </div>
-
-
-        <!-- PRESS SPACE -->
-        <div class="overlay popup popup-top popup-open" id="overlay">
-          <div class="overlay popup-contents"> 
-            <label class="label-overlay" id="labelOverlay"> press space to start </label>
-            <label class="label-overlay" id="labelTotal"></label>
+          <!-- MOBILE PRIMARY BUTTONS -->
+          <div class="mobile-primary popup-open" id="mobilePrimary">
+            <button class="btn" id="btnStart"> start </button>
+            <button class="btn" id="btnSettings"> settings </button>
           </div>
-        </div>
 
-        <!-- BLACK -->
-        <div class="overlay popup popup-center popup-closed" id="overlayBlack">
-          <div class="overlay popup-contents"> 
-            <label class="label-overlay label-black"> </label>
-          </div>
-        </div>
-
-        <!-- SETTINGS -->
-        <div class="popup popup-center popup-closed" id="overlaySettings">
-          <div class="popup-contents settings"> 
-          
-            <p class="popup-label label-settings" id="disclaimer"> </p>
-
-            <div class="popup-label panels">
-              <p class="list popup-label" id="list"> </p>
-
-              <div class="divSlider">
-                <label id="labelMode"> mode: release </label>
-                <input type="range" min="0" max="4" value="0" class="slider" id="slider"> </input>
-              </div>
-
-            </div>
-            
-          </div>
         </div>
 
       </div>
@@ -73,11 +49,52 @@
       <footer>
       </footer>
 
+      <!---------- POPUPS ---------->
+
+      <!-- PRESS SPACE -->
+      <div class="overlay popup popup-top popup-open" id="overlay">
+        <div class="overlay popup-contents"> 
+          <label class="label-overlay label-start" id="labelOverlay"> press space to start </label>
+          <label class="label-overlay" id="labelTotal"></label>
+        </div>
+      </div>
+
+      <!-- BLACK -->
+      <div class="overlay popup popup-center popup-closed" id="overlayBlack">
+        <div class="overlay popup-contents"> 
+          <label class="label-overlay label-black"> </label>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="popup popup-center popup-closed" id="overlaySettings">
+        <div class="popup-contents settings"> 
+
+          <div class="divSlider">
+            <label id="labelMode"> mode: release </label>
+            <input type="range" min="0" max="4" value="0" class="slider" id="slider"> </input>
+          </div>
+
+          <p class="popup-label label-settings" id="disclaimer"> </p>
+          <p class="list popup-label" id="list"> </p>
+
+        </div>
+      </div>
+
+      <!-- MOBILE CONTROLS -->
+      <div class="mobile-controls popup-closed" id="mobileControls">
+        <button class="control-btn btn-up" id="btnUp"> 🡑 </button>
+        <button class="control-btn btn-left" id="btnLeft"> 🡐 </button>
+        <button class="control-btn btn-right" id="btnRight"> 🡒 </button>
+        <button class="control-btn btn-down" id="btnDown"> 🡓 </button>
+      </div>
+      
     </div>
     
     <script src="text/text.js"></script>
     
     <script src="js/Game.js"></script>
+    <script src="js/Mobile.js"></script>
 
     <script src="js/Levels.js"></script>
     <script src="js/levels/standard.js"></script>

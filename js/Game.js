@@ -1,8 +1,20 @@
 /***************************** BLOCK GAME *****************************/
 
+
 // page elements
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+
+var mobile = window.matchMedia("only screen and (min-width: 320px) and (max-width: 768px) and (orientation: portrait)").matches
+console.log("Mobile Device: " + mobile);
+canvas.height = mobile ? 780 : 500;
+
+var iPhoneX = window.matchMedia("only screen and (min-height : 812px) and (orientation: portrait)").matches
+console.log("iPhone X: " + iPhoneX);
+canvas.height = iPhoneX && mobile ? 950 : canvas.height;
+
+var mobileControls = document.getElementById("mobileControls");
+var mobilePrimary = document.getElementById("mobilePrimary");
 
 
 // settings elements
@@ -544,6 +556,13 @@ function stop() {
   console.log("Score: " + score);
   overlay.classList.add("popup-open");
   overlay.classList.remove("popup-closed");
+
+  if(mobile) {
+    mobileControls.classList.remove("popup-open");
+    mobileControls.classList.add("popup-closed");
+    mobilePrimary.classList.add("popup-open");
+    mobilePrimary.classList.remove("popup-closed");
+  }
 }
 
 
@@ -628,6 +647,13 @@ function start() {
   overlay.classList.add("popup-closed");
   document.body.classList.remove("darken");
   canvas.classList.remove("transparent");
+
+  if(mobile) {
+    mobileControls.classList.add("popup-open");
+    mobileControls.classList.remove("popup-closed");
+    mobilePrimary.classList.remove("popup-open");
+    mobilePrimary.classList.add("popup-closed");
+  }
 
   settings(true);
   

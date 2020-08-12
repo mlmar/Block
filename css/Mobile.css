@@ -1,0 +1,123 @@
+.mobile-primary, .mobile-controls {
+  display: none;
+}
+
+.mobile-settings {
+  width: 100%;
+}
+
+@media only screen 
+  and (-webkit-min-device-pixel-ratio: 2) 
+  and (max-width: 768px) 
+  and (min-width: 320px) 
+  and (orientation: portrait) {
+ 
+  * {
+    font-family: Arial, sans-serif;
+  }
+
+  html, body {
+    display: flex;
+    font-size: 1vh;
+    align-items: center;
+    width: 100%;
+
+    font-weight: 750;
+  }
+
+  nav {
+    height: 1%;
+  }
+
+  .divMain {
+    align-items: center;
+    width: 100%;
+  }
+
+  .holder {
+    display: block;
+    width: 97%;
+  }
+
+  .holder-secondary {
+    align-items: center;
+    max-width: 100%;
+  }
+
+  .label-start {
+    margin-top: 100% !important;
+  }
+
+  .canvas {
+    align-items: center;
+    max-width: 100%;
+    margin-left: -2px;
+  }
+
+  .settings {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 50%;
+    width: 100%;
+  }
+
+  .label-settings {
+    width: 100%;
+    font-size: 2rem;
+  }
+
+  .list {
+    font-size: 2rem;
+  }
+
+  .mobile-primary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding-top: 1rem;
+    height: 100%;
+  }
+ 
+  .mobile-controls {
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr);
+    position: fixed;
+    top: 20px;
+    left: 0;
+    /* height: 600px; */
+    height: 160vw;
+    width: 100%;
+    opacity: .1;
+    background: none;
+  }
+
+  .control-btn {
+    background-color:transparent;
+    border: 1px solid #000000;
+    display: inline-block;
+    color: #000000;
+    font-family: Arial;
+    font-size:4rem;
+  }
+
+  .control-btn:focus {
+    outline: none;
+  }
+  
+  .btn {
+    height: 5vh;
+  }
+
+  .btn-left, .btn-right {
+    height: 100%;
+    background: none;
+  }
+
+  .btn-up, .btn-down {
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    height: 100%;
+    background: none;
+  }
+}
