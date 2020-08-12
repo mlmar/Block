@@ -19,12 +19,3 @@ btnUp.addEventListener("touchstart", function() { action(direction.UP); } );
 btnLeft.addEventListener("touchstart", function() { action(direction.LEFT); } );
 btnRight.addEventListener("touchstart", function() { action(direction.RIGHT); } );
 btnDown.addEventListener("touchstart", function() { action(direction.DOWN); } );
-
-
-
-// using fastclick.js library to bypass 300ms click delay in safari standalone 
-// if ('addEventListener' in document) {
-//   document.addEventListener('DOMContentLoaded', function() {
-//     FastClick.attach(document.body);
-//   }, false);
-// }
