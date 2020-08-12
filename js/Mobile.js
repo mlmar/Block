@@ -28,8 +28,7 @@ btnRight.ontouchstart = function(event) {
   action(direction.RIGHT);
 }
 
-
-btnUp.onclick = function(event) { console.log(event) }
-btnDown.onclick = function(event) { console.log(event) }
-btnLeft.onclick = function(event) { console.log(event) }
-btnRight.onclick = function(event) { console.log(event) }
+btnUp.onclick = function(event) { event.preventDefault() }
+btnDown.onclick = function(event) { event.preventDefault() }
+btnLeft.onclick = function(event) { event.preventDefault() }
+btnRight.onclick = function(event) { event.preventDefault() }

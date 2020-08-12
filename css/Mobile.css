@@ -97,7 +97,7 @@
     grid-template-columns: repeat(5, 1fr);
     grid-gap: 1vh;
     position: fixed;
-    top: 70vh;
+    top: 75vh;
     left: 0;
     height: 18vh;
     width: 100%;
