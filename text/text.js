@@ -1,9 +1,20 @@
-general = "Github pages are static so I can't auto add your high scores, send me them if you want. I'll update this list when I feel like it. Also, just refresh when the game breaks."
+general = 
+  "I KNOW YOU CAN'T ADD YOUR SCORES. GITHUB WON'T LET ME. JUST SEND ME THEM IF YOU WANT.";
+
+general += "\n\n";
+
+general += "please try to make it to level 10.";
+
+general += "\n\n";
+
+general +=
+  "i'm trying to make this work on mobile but it's hard."
 
 scoreList = [
-  "johnny: 351",
+  "JOHNNY: 351 <----- beat this",
   "karen: 309",
   "marcus: 295",
-  "ivan: 289",
+  "ivan: 289",  
   "lucas: 286",
+  "kris: 126"
 ];

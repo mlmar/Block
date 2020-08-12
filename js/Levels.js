@@ -28,11 +28,9 @@ function speedHandler() {
   // !!! increment the speed every 4 levels until 
   if(score < (tick * 16) && score % (tick * 4) == 0 && score > 0) {
     console.log("Speed increase");
-
     randomSpeed++;
   }
 }
-
 
 // put on an item on the board every half tick
 function itemHandler() {
