@@ -80,6 +80,3 @@ list.innerText = text;
 resetValues();
 setLevelTick(20);
 startScreen();
-
-if(!mobile)
-  alert('im pushing a bunch of test updates right now, so the game might break')

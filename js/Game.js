@@ -9,7 +9,7 @@ var ctx = canvas.getContext("2d");
 /********* MOBILE DIMENSIONS + IPHONE X SPECIFIC DIMENSIONS *********/
 var mobile = window.matchMedia("only screen and (min-width: 320px) and (max-width: 768px) and (orientation: portrait)").matches
 console.log("Mobile Device: " + mobile);
-canvas.height = mobile ? 620 : 500; // not mobile, use default 500
+canvas.height = mobile ? 740 : 500; // not mobile, use default 500
 
 // if mobile, check if its an iphonex
 var iPhoneX = window.matchMedia("only screen and (min-height : 812px) and (orientation: portrait)").matches

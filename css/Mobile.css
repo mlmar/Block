@@ -14,6 +14,7 @@
  
   * {
     font-family: Arial, sans-serif;
+    touch-action: manipulation !important; 
   }
 
   html, body {
@@ -22,7 +23,6 @@
     align-items: center;
     width: 100%;
     font-weight: 750;
-    touch-action: manipulation !important;
     user-select:none;
   }
 
@@ -66,6 +66,8 @@
     width: 100%;
   }
 
+  
+
   .label-settings {
     width: 100%;
     font-size: 2rem;
@@ -101,7 +103,6 @@
     width: 100%;
     background: none;
     opacity: .3;
-    touch-action: manipulation;
   }
 
   .control-btn {
@@ -110,7 +111,6 @@
     ouch-action: manipulation;
     outline: none;
     background: linear-gradient(#747474, #212121);
-    touch-action: manipulation;
   }
 
   .btn-up {
