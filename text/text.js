@@ -1,16 +1,10 @@
 general = 
-  "I KNOW YOU CAN'T ADD YOUR SCORES. GITHUB WON'T LET ME. JUST SEND ME THEM IF YOU WANT.";
-
-general += "\n\n";
-
-general += "please try to make it to level 10.";
+  "GITHUB DOESN'T LET ME ADD HIGHSCORES. JUST SEND ME THEM IF YOU WANT.";
 
 general += "\n\n";
 
 general +=
-  "mobile (kind of) works but it's slower. if you're on ios you need to use the 'ADD TO HOMESCREEN' option"
-general +=
-  "i have no idea how this runs on android."
+  "mobile works but it's slower (on ios). if you're on ios you need to use the 'ADD TO HOMESCREEN' option."
 
 scoreList = [
   "JOHNNY: 351 <----- beat this",

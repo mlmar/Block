@@ -9,16 +9,16 @@ var ctx = canvas.getContext("2d");
 /********* MOBILE DIMENSIONS + IPHONE X SPECIFIC DIMENSIONS *********/
 var mobile = window.matchMedia("only screen and (min-width: 320px) and (max-width: 768px) and (orientation: portrait)").matches
 console.log("Mobile Device: " + mobile);
-canvas.height = mobile ? 740 : 500; // not mobile, use default 500
+canvas.height = mobile ? 780 : 500; // not mobile, use default 500
 
 // if mobile, check if its an iphonex
 var iPhoneX = window.matchMedia("only screen and (min-height : 812px) and (orientation: portrait)").matches
 console.log("iPhone X: " + iPhoneX);
-canvas.height = iPhoneX && mobile ? 920 : canvas.height; // not x, use previous value
+canvas.height = iPhoneX && mobile ? 900 : canvas.height; // not x, use previous value
 
 var mobilePrimary = document.getElementById("mobilePrimary"); // start/settings btn
 var mobileControls = document.getElementById("mobileControls"); // u,d,l,r
-mobileControls.style.top = iPhoneX && mobile ? "80vh" : mobilePrimary.style.height;
+mobileControls.style.top = iPhoneX && mobile ? "75vh" : mobileControls.style.top;
 /********* END MOBILE DIMENSIONS *********/
 
 

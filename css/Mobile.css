@@ -13,8 +13,16 @@
   and (orientation: portrait) {
  
   * {
-    font-family: Arial, sans-serif;
     touch-action: manipulation !important; 
+  }
+
+  @font-face {
+    font-family: Impact;
+    src: url(../text/impact/impact.ttf);
+    font-weight: 750;
+
+    font-family: Arial, sans-serif;
+    font-weight: bold;
   }
 
   html, body {
@@ -22,8 +30,7 @@
     font-size: 1vh;
     align-items: center;
     width: 100%;
-    font-weight: 750;
-    user-select:none;
+    user-select: none;
   }
 
   nav {
@@ -52,8 +59,8 @@
   .canvas {
     align-items: center;
     max-width: 100%;
+    border: none;
     margin-left: -2px;
-    touch-action: manipulation;
   }
 
   /* settings */
@@ -62,11 +69,9 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 50%;
+    height: 75%;
     width: 100%;
   }
-
-  
 
   .label-settings {
     width: 100%;
@@ -95,11 +100,11 @@
   .mobile-controls {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-gap: 1vh;
+    /* grid-gap: 1vh; uncomment for smaller buttons */
     position: fixed;
     top: 75vh;
     left: 0;
-    height: 18vh;
+    height: 19vh;
     width: 100%;
     background: none;
     opacity: .3;
