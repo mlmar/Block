@@ -66,10 +66,12 @@ function setMode() {
 }
 
 
-
+// input correct text to settings
+var topScore = document.getElementById("topScore");
+topScore.innerText = "current top score:\n" + scoreList[0];
 var text = "";
 disclaimer.innerText = general;
-for(i = 0; i < scoreList.length; i++) {
+for(i = 1; i < scoreList.length; i++) {
    text += scoreList[i] + "\n";
 }
 list.innerText = text;

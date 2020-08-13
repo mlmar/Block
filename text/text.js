@@ -1,14 +1,11 @@
-general = "drag the slider to change gamemodes";
-
-general += "\n\n"
-
-general += 
+general = 
   "GITHUB DOESN'T LET ME ADD HIGHSCORES. JUST SEND ME THEM IF YOU WANT.";
 
 general += "\n\n";
 
-general +=
-  "mobile works but it's slower. if you're on ios you need to use the 'ADD TO HOMESCREEN' option."
+general +="MOBILE:";
+general += "\n - ios: add website to home screen for it to work."
+general += "\n - android: should work anyway."
 
 scoreList = [
   "JOHNNY: 351 <----- try to beat this",

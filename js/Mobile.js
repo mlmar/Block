@@ -14,17 +14,6 @@ var btnLeft = document.getElementById("btnLeft");
 var btnRight = document.getElementById("btnRight");
 var btnDown = document.getElementById("btnDown");
 
-
-checkBox.onchange = function(event) {
-  if(checkBox.checked) {
-    listener = "touchstart"
-    console.log("touchstart");
-  } else {
-    listener = "touchend"
-    console.log("touchend")
-  }
-}
-
 listener = "touchend";
 
 btnUp.addEventListener(listener, function() { action(direction.UP); } );
