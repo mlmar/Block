@@ -587,8 +587,8 @@ function stop() {
   if(mobile) {
     mobileControls.classList.remove("popup-open");
     mobileControls.classList.add("popup-closed");
-    mobilePrimary.classList.add("popup-open");
-    mobilePrimary.classList.remove("popup-closed");
+    // mobilePrimary.classList.add("popup-open");
+    // mobilePrimary.classList.remove("popup-closed");
   }
 }
 
@@ -680,8 +680,8 @@ function start() {
   if(mobile) {
     mobileControls.classList.add("popup-open");
     mobileControls.classList.remove("popup-closed");
-    mobilePrimary.classList.remove("popup-open");
-    mobilePrimary.classList.add("popup-closed");
+    // mobilePrimary.classList.remove("popup-open");
+    // mobilePrimary.classList.add("popup-closed");
   }
 
   settings(true);

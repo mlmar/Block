@@ -3,7 +3,7 @@
   <head>
 
     <!-- version 3 -->
-    <title> Block 3.14 </title>
+    <title> Block 3.145 </title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -27,8 +27,8 @@
         <!-- GAME CONTAINER  -->
         <div class="holder-secondary" id="holderSecondary">
           <div class="top">
-            <label class="label title"> block 3.14 </label>
-            <label class="label esc"> esc for gamemode </label>
+            <label class="label title"> block 3.145 </label>
+            <label class="label esc" id="labelMode"> esc for gamemode </label>
           </div>
           
           <canvas width="500" height="500" class="canvas" id="canvas"> </canvas>
@@ -43,10 +43,10 @@
           </div>
 
           <!-- MOBILE PRIMARY BUTTONS -->
-          <div class="mobile-primary popup-open" id="mobilePrimary">
-            <button class="btn" id="btnStart"> start </button>
-            <button class="btn" id="btnSettings"> settings </button>
-          </div>
+          <!-- <div class="mobile-primary popup-open" id="mobilePrimary"> -->
+            <!-- <button class="btn" id="btnStart"> start </button> -->
+            <!-- <button class="btn" id="btnSettings"> settings </button> -->
+          <!-- </div> -->
 
         </div>
 
@@ -60,15 +60,15 @@
       <!-- PRESS SPACE -->
       <div class="overlay popup popup-top popup-open" id="overlay">
         <div class="overlay popup-contents"> 
-          <label class="label-overlay label-start" id="labelOverlay"> press space to start </label>
-          <label class="label-overlay" id="labelTotal"></label>
+          <label class="label-main label-start" id="labelOverlay"> press space to start </label>
+          <label class="label-main" id="labelTotal"></label>
         </div>
       </div>
 
       <!-- BLACK -->
       <div class="overlay popup popup-center popup-closed" id="overlayBlack">
         <div class="overlay popup-contents"> 
-          <label class="label-overlay label-black"> </label>
+          <label class="label-black"> </label>
         </div>
       </div>
 
@@ -87,8 +87,10 @@
             <input type="color" value="#03a9f4" class="color" id="color">
           </div>
           <p class="popup-label label-settings" id="disclaimer"> </p>
-          <label class="label-color" id="topScore"> current top score:  </label>
+          <label class="label-color" id="topScore"> </label>
           <p class="list popup-label" id="list"> </p>
+
+          <button class="btn-close" id="btnClose"> close </button>
 
         </div>
       </div>

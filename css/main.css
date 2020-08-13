@@ -98,8 +98,8 @@ footer {
 
 .label {
   background: none;
-/*   font-family: impact !important; */
   font-size: 2rem;
+  transition: font-size .1s linear;
   text-transform: lowercase;
 }
 
@@ -148,6 +148,7 @@ footer {
   padding: 1.5vh !important;
   width: 100%;
   max-width: 1vh !important;
+  background: rgba(33, 33, 33, .97)
 }
 
 .label-settings {
@@ -190,4 +191,8 @@ footer {
 
 .slider {
   width: 100%;
+}
+
+.btn-close {
+  display: none;
 }
