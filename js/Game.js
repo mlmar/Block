@@ -2,9 +2,13 @@
 
 
 // fastclick.js
-window.addEventListener('load', function() {
-    new FastClick(document.body);
-}, false);
+if ('addEventListener' in document) {
+  document.addEventListener('DOMContentLoaded', function() {
+    FastClick.attach(document.body);
+  }, false);
+}
+
+
 
 // page elements
 var canvas = document.getElementById("canvas");
@@ -36,6 +40,7 @@ const modes = ["original","version one","endurance","waffle","experimental"];
 // settings elements
 var overlaySettings = document.getElementById("overlaySettings");
 var disclaimer = document.getElementById("disclaimer");
+var colorPicker = document.getElementById("color");
 var list = document.getElementById("list");
 var slider = document.getElementById("slider");
 var labelDif = document.getElementById("labelMode");
@@ -721,4 +726,10 @@ function startScreen() {
       blocks[i].state = direction.DOWN;
       drawBlock(blocks[i]);
     }
+}
+
+colorPicker.onchange = function(event) {
+  PLAYER_COLOR = colorPicker.value;
+  player.color = PLAYER_COLOR;
+  drawBlock(player);
 }

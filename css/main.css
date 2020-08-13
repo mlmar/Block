@@ -171,6 +171,23 @@ footer {
   max-width: 80vh;
 }
 
+.divColor {
+  text-align: center;
+}
+
+.label-color {
+  color: white;
+  font-size: 3vh;
+}
+
+.color {
+  border: none;
+  margin-left: 2rem;
+  height: 3vh;
+  width: 5rem;
+  appearance: none;
+}
+
 .slider {
   width: 100%;
 }

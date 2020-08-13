@@ -15,10 +15,22 @@ var btnRight = document.getElementById("btnRight");
 var btnDown = document.getElementById("btnDown");
 
 
-btnUp.addEventListener("touchstart", function() { action(direction.UP); } );
-btnLeft.addEventListener("touchstart", function() { action(direction.LEFT); } );
-btnRight.addEventListener("touchstart", function() { action(direction.RIGHT); } );
-btnDown.addEventListener("touchstart", function() { action(direction.DOWN); } );
+checkBox.onchange = function(event) {
+  if(checkBox.checked) {
+    listener = "touchstart"
+    console.log("touchstart");
+  } else {
+    listener = "touchend"
+    console.log("touchend")
+  }
+}
+
+listener = "touchend";
+
+btnUp.addEventListener(listener, function() { action(direction.UP); } );
+btnLeft.addEventListener(listener, function() { action(direction.LEFT); } );
+btnRight.addEventListener(listener, function() { action(direction.RIGHT); } );
+btnDown.addEventListener(listener, function() { action(direction.DOWN); } );
 
 
 btnUp.addEventListener("click", function(e) { e.preventDefault() } );
