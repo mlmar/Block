@@ -104,7 +104,8 @@ function colorMatch(c) {
   }
 }
 
-var clear_color = WHITE; // canvas background should be white
+var default_clear_color = !mobile ? WHITE : BLACK;
+var clear_color = default_clear_color; // canvas background should be white
 
 // general block information
 const BLOCK_SIZE = 20; // arbitrary
@@ -114,7 +115,6 @@ var STARTING_Y = (canvas.height / 2) - (BLOCK_SIZE / 2); // center of the page
 var player; // will be initialized as a Block object in the reset() function
 var playing = false; // true if game is in play
 var PLAYER_COLOR = BLUE; // default player color
-
 
 // variables that directly effect difficutly
 var default_gap = 32; // default delay between each block generation
@@ -639,7 +639,7 @@ function resetValues() {
   STARTING_Y = (canvas.height / 2) - (BLOCK_SIZE / 2); // center of the page
 
   // reset all dynamic variables to defaults
-  clear_color = WHITE;
+  clear_color = default_clear_color;
   player = new Block(STARTING_X, STARTING_Y, BLOCK_SIZE, BLOCK_SIZE, PLAYER_COLOR);
   items = [];
   blocks = [];

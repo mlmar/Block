@@ -32,6 +32,10 @@
     align-items: center;
     width: 100%;
     user-select: none;
+
+    background: black;
+    transition: background .5s linear !important;
+    color: white !important;
   }
 
   nav {
@@ -63,7 +67,7 @@
   .esc {
     display: block;
     font-size: 2.5rem !important;
-    color: #003d9e;
+    color: #e91e63;
   }
 
   .label-main {
@@ -137,15 +141,14 @@
     height: 20vh;
     width: 100%;
     background: none;
-    opacity: .3;
   }
 
   .control-btn {
-    border: 1px solid #ffffff;
+    border: none;
     border-radius: 10rem;
     outline: none;
     /* background: linear-gradient(#747474, #212121); */
-    background: #8a8a8a;
+    background: #8a8a8a73;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
   }
 
