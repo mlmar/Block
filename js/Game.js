@@ -1,6 +1,11 @@
 /***************************** BLOCK GAME *****************************/
 
 
+// fastclick.js
+window.addEventListener('load', function() {
+    new FastClick(document.body);
+}, false);
+
 // page elements
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -21,6 +26,11 @@ var mobileControls = document.getElementById("mobileControls"); // u,d,l,r
 mobileControls.style.top = iPhoneX && mobile ? "75vh" : mobileControls.style.top;
 /********* END MOBILE DIMENSIONS *********/
 
+
+
+
+var mode = 0 // modified by settings
+const modes = ["original","version one","endurance","waffle","experimental"];
 
 
 // settings elements
@@ -106,8 +116,6 @@ var default_gap = 32; // default delay between each block generation
 var default_speed = 3; // defualt speed for random block movement
 var default_height_limiter // default height limit for random blocks
 
-var mode = 0 // modified by settings
-const modes = ["original","experimental 1","version one","placeholder","experimental 2"];
 
 // stacks for generation of random items and random blockss
 var items = []; // random items
@@ -207,7 +215,7 @@ function drawBlock(b) {
     if(!mobile) {
       ctx.font = !screen ? "3rem Impact" : "1rem Impact";
     } else {
-      ctx.font = !screen? "5vh Arial" : "2vh Arial";
+      ctx.font = !screen? "5vh Impact" : "2vh Impact";
     }
     ctx.fillText(b.text, b.x, b.y, b.width);
   }
@@ -408,7 +416,7 @@ function randomBlock(speed, state, randomColor = false) {
       break;
   }
 
-  if(randomColor || mode == 4 || mode == 1)
+  if(randomColor || mode == 4 || mode == 3)
     block.color = pickRandom(colors, 1)[0];
   
   block.speed = speed;
@@ -470,18 +478,22 @@ function useItem(block, playerBlock = false) {
       originalSpeed = randomSpeed; // save original speed
       randomSpeed *= .66; // slow down to 66% of original speed
       for(i in blocks) { // modify all existing speeds
-        blocks[i].speed = randomSpeed;
+        if(blocks[i].color != BLACK)
+          blocks[i].speed = randomSpeed;
       }
       activeItem = true;
       bonus++;
       break;
     case "clear":
       for(i in blocks) {
-        blocks[i].collide = false; // turn of collision for existing blocks
-        blocks[i].color = colorMatch(blocks[i].color); // transparent blocks
+        if(blocks[i].color != BLACK) {
+          blocks[i].collide = false; // turn of collision for existing blocks
+          blocks[i].color = colorMatch(blocks[i].color); // transparent blocks
+        }
       }
       activeItem = true;
       bonus++;
+      randomLaser(pickRandom(directions, 1)[0]);
       break;
     case "life":
       player.state = "life";
@@ -582,7 +594,7 @@ function stop() {
 function reset() {
   for(i in blocks) {
     if(blocks[i].collide) {
-      if(mode != 4 && mode != 1) {
+      if(mode < 2) {
         blocks[i].state = direction.DOWN;
       } else if(mode == 4) {
         flip(blocks[i]);

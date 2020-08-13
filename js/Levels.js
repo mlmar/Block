@@ -2,16 +2,23 @@
 
 // call this update once every tick
 function updateTick() {
-  
-  if(mode == 0 || mode == 2 || mode == 3) { // basic progression for levels 1-10, 14+
-    
-    original();
 
-    speedHandler(); //speed handler only applies to the original type modes
-  } else if(mode == 1) {
-    cluster();
-  } else if(mode == 4) { // wide screen, faster blocks, three sides, generateLoop
-    maxMode();
+  // run the correct level handlers for each mode
+  switch(mode) {
+    case 0: // the only difference between 0 and 1 are the spee differences
+    case 1:
+      original()
+      speedHandler()
+      break;
+    case 2:
+      endurance();
+      break;
+    case 3:
+      cluster();
+      break;
+    case 4:
+      maxMode();
+      break;
   }
 
   /******* handlers for items and labels *******/
@@ -61,7 +68,7 @@ function itemHandler() {
   }
 
   // every half tick after level 4, place a random item on the screen
-  if((score > (tick * 4) || mode == 4 || mode == 1) && items.length < 1) {
+  if((score > (tick * 4) || mode == 4 || mode == 3) && items.length < 1) {
     if((score % halftick == 0 || mode == 4) && !activeItem) {
       randomItem(pickRandom(effects, 1)[0]);
     } else if(score % halftick / 2 == 0) {
@@ -132,7 +139,7 @@ function generateSingle(level, direction) {
 }
 
 // FOUR CONSECUTIVE LEVELS: generate blocks going in the same direction
-function fourSingle(level_n) {
+function fourSingle(level_n, lasers = false) {
   // level is starting point 0
   // relative level notation: if n was level 1, then the following levels are like this:
   var level_a = level_n + tick * 1;
@@ -143,6 +150,27 @@ function fourSingle(level_n) {
   generateSingle(level_a, direction.UP);
   generateSingle(level_b, direction.LEFT);
   generateSingle(level_c, direction.RIGHT);
+
+  var quarter = score % (halftick / 2) == 0;
+
+  if(lasers) {
+    if(score >= level_n && score < level_a && quarter) {
+      randomLaser(direction.RIGHT);
+      randomLaser(direction.LEFT);
+    }
+    if(score >= level_a && score < level_b && quarter) {
+      randomLaser(direction.RIGHT);
+      randomLaser(direction.LEFT);
+    }
+    if(score >= level_b && score < level_c && quarter) {
+      randomLaser(direction.UP);
+      randomLaser(direction.DOWN);
+    }
+    if(score >= level_c && quarter) {
+      randomLaser(direction.UP);
+      randomLaser(direction.DOWN);
+    }
+  }
 }
 
 // FOUR CONSUCUTIVE LEVELS: generate blocks going in two different directions
@@ -279,6 +307,20 @@ function randomLaser(blockDirection) {
   }
 }
 
+// target a laser at a block
+function targetLaser(blockDirection, target) {
+  switch(blockDirection) {
+    case direction.UP:
+    case direction.DOWN:
+      laser(blockDirection, target.x);
+      break;
+    case direction.LEFT:
+    case direction.RIGHT:
+      laser(blockDirection, target.y);
+      break;
+  }
+}
+
 // determine a direction and a position to shoot a "laser" in
 function laser(blockDirection, position) {
   var placeholder;
@@ -321,6 +363,7 @@ function laser(blockDirection, position) {
 
 function freeLife() {
   console.log("Free life @ " + score);
+  labelBonus.classList.add("label-bonus");
   player.state = "life";
   player.color = PLAYER_YELLOW;
 }

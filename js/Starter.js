@@ -39,21 +39,21 @@ function setMode() {
       canvas.width = 500;
       break;
     case 1:
-      default_speed = 4;
-      default_gap = 32;
-      default_height_limiter = .6;
-      canvas.width = 500;
-      break;
-    case 2:
       default_speed = 7;
       default_gap = 26;
       default_height_limiter = .8;
       canvas.width = 500;
       break;
-    case 3:
-      default_speed = 8;
-      default_gap = 20;
+    case 2:
+      default_speed = 3;
+      default_gap = 28;
       default_height_limiter = .8;
+      canvas.width = 500;
+      break;
+    case 3:
+      default_speed = 4;
+      default_gap = 32;
+      default_height_limiter = .6;
       canvas.width = 500;
       break;
     case 4:

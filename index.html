@@ -3,7 +3,7 @@
   <head>
 
     <!-- version 3 -->
-    <title> Block 3.02 </title>
+    <title> Block 3.03 </title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -27,8 +27,8 @@
         <!-- GAME CONTAINER  -->
         <div class="holder-secondary" id="holderSecondary">
           <div class="top">
-            <label class="label title"> block 3.02 </label>
-            <label class="label esc"> esc for settings </label>
+            <label class="label title"> block 3.03 </label>
+            <label class="label esc"> esc for gamemode </label>
           </div>
           
           <canvas width="500" height="500" class="canvas" id="canvas"> </canvas>
@@ -36,7 +36,7 @@
           <!-- MENU -->
           <div class="menu">
             <div class="menu-grid">
-              <label class="label" id="labelScore"> score: 0 </label>
+              <label class="label label-score" id="labelScore"> score: 0 </label>
               <label class="label label-center" id="labelBonus"> bonus: 0 </label>
               <label class="label label-level" id="labelLevel"> level: 1 </label>
             </div>
@@ -77,7 +77,7 @@
         <div class="popup-contents settings"> 
 
           <div class="divSlider">
-            <label id="labelMode"> mode: release </label>
+            <label id="labelMode"> mode: original </label>
             <input type="range" min="0" max="4" value="0" class="slider" id="slider"> </input>
           </div>
 
@@ -96,6 +96,10 @@
       </div>
       
     </div>
+  
+    
+    <!-- external library for fastclicking on safari standalone -->
+    <script type='application/javascript' src="js/ftlabs-fastclick/lib/fastclick.js"></script> 
     
     <script src="text/text.js"></script>
     
@@ -105,6 +109,7 @@
     <script src="js/Levels.js"></script>
     <script src="js/levels/standard.js"></script>
     <script src="js/levels/cluster.js"></script>
+    <script src="js/levels/endurance.js"></script>
     <script src="js/levels/max.js"></script>
 
     <script src="js/Starter.js"></script>

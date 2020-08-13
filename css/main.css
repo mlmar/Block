@@ -51,6 +51,7 @@ nav {
 .holder-secondary {
   display: table-cell;
   vertical-align: middle;
+  text-align: center;
 }
 
 footer {
@@ -67,11 +68,12 @@ footer {
 .top {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  font-size: 2.px !important;
+  font-size: 2px !important;
 }
 
 .title {
   font-size: 2.5rem !important;
+  text-align: left;
 }
 
 .esc {
@@ -103,6 +105,11 @@ footer {
 
 .label-black {
   color: white !important;
+}
+
+
+.label-score {
+  text-align: left;
 }
 
 .label-bonus {

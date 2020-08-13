@@ -5,7 +5,7 @@ function original() {
     fourSingle(0); // START AT 0: level 1-4
 
   if(score < tick * 8)
-    fourDouble(tick * 4, true) // level 5-8
+    fourDouble(tick * 4) // level 5-8
 
   if(score < tick * 10)
     levelTransition(); // level 9-10: clutter() to dark mode
