@@ -193,6 +193,6 @@ footer {
   width: 100%;
 }
 
-.btn-close {
+.btn-close, .banner {
   display: none;
 }
