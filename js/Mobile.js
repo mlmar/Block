@@ -21,7 +21,7 @@ btnRight.addEventListener("touchstart", function() { action(direction.RIGHT); } 
 btnDown.addEventListener("touchstart", function() { action(direction.DOWN); } );
 
 
-// btnUp.addEventListener("click", function(e) { e.preventDefault() } );
-// btnLeft.addEventListener("click", function(e) { e.preventDefault() } );
-// btnRight.addEventListener("click", function(e) { e.preventDefault() } );
-// btnDown.addEventListener("click", function(e) { e.preventDefault() } );
+btnUp.addEventListener("click", function(e) { e.preventDefault() } );
+btnLeft.addEventListener("click", function(e) { e.preventDefault() } );
+btnRight.addEventListener("click", function(e) { e.preventDefault() } );
+btnDown.addEventListener("click", function(e) { e.preventDefault() } );
