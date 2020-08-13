@@ -13,7 +13,8 @@
   and (orientation: portrait) {
  
   * {
-    touch-action: manipulation !important; 
+    touch-action: manipulation !important;
+    user-select: none !important;
   }
 
   @font-face {
