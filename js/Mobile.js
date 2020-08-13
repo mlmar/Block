@@ -1,12 +1,12 @@
 /** mobile control listeners ***/
-var labelMode = document.getElementById("labelMode");
+var esc = document.getElementById("esc");
 var btnClose = document.getElementById("btnClose");
 
 function addButtons() {
   /** assign play and settings buttons for mobile **/
 
 
-  labelMode.ontouchend = function(event) {
+  esc.ontouchend = function(event) {
     action(ESCAPE);
   }
 
@@ -45,6 +45,6 @@ function addButtons() {
 
 if(mobile) {
   labelOverlay.innerText = "tap to play";
-  labelMode.innerText = "gamemode settings"
+  esc.innerText = "gamemode settings"
   addButtons();
 }
