@@ -207,14 +207,14 @@
     justify-content: center;
     position: fixed;
     text-align: center;
-    top: 30%;
+    top: 20%;
     left: 0;
     width: 100%;
-    height: 50%;
+    height: 60%;
     align-items: center;
     font-size: 6vh;
     color: white;
-    background: #171717db;
+    background: #0e0e0eed;
     z-index: 1;
     grid-gap: 2rem;
   }
