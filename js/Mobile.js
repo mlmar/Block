@@ -50,3 +50,24 @@ if(mobile) {
   esc.innerText = "gamemode settings"
   addButtons();
 }
+
+
+
+
+/** show add baner if app already installed **/
+// https://stackoverflow.com/questions/50543163/can-i-detect-if-my-pwa-is-launched-as-an-app-or-visited-as-a-website
+const mobileIos = () => {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  return /iphone|ipad|ipod/.test( userAgent );
+}
+
+var banner = document.getElementById("banner");
+if (mobileIos && "standalone" in window.navigator && !window.navigator.standalone) {
+  console.log("displaying banner");
+  banner.classList.add("popup-open");
+  banner.classList.remove("popup-closed");
+} else {
+  console.log("hiding banner");
+  banner.classList.remove("popup-open");
+  banner.classList.add("popup-closed");
+}

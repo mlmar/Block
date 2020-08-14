@@ -1,0 +1,15 @@
+{
+  "background_color": "black",
+  "description": "a block game made by marcus martinez",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "text/icon.png",
+      "sizes": "300x300",
+      "type": "image/png"
+    }
+  ],
+  "name": "block",
+  "short_name": "block",
+  "start_url": "index.html"
+}

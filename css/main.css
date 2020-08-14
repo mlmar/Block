@@ -193,10 +193,8 @@ footer {
   appearance: none;
 }
 
-.slider {
-  width: 100%;
-}
 
+/** hide mobile elements **/
 .btn-close, .banner {
   display: none;
 }

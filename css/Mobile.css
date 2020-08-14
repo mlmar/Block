@@ -202,13 +202,19 @@
   }
 
   .banner {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: fixed;
     text-align: center;
-    top: 50%;
+    top: 30%;
     left: 0;
     width: 100%;
-    height: 100%;
-    font-size: 3.5rem;
+    height: 30%;
+    align-items: center;
+    font-size: 6vh;
+    color: white;
+    background: #171717db;
+    z-index: 1;
   }
 }
