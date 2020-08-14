@@ -2,30 +2,31 @@
 var esc = document.getElementById("esc");
 var btnClose = document.getElementById("btnClose");
 
+var btnUp = document.getElementById("btnUp");
+var btnLeft = document.getElementById("btnLeft");
+var btnRight = document.getElementById("btnRight");
+var btnDown = document.getElementById("btnDown");
+
+
+var listener = "touchend";
+
 function addButtons() {
   /** assign play and settings buttons for mobile **/
 
 
-  esc.ontouchend = function(event) {
+  esc.addEventListener(listener, function() {
     action(ESCAPE);
-  }
+  });
 
-  btnClose.ontouchend = function(event) {
+  btnClose.addEventListener(listener, function() {
     action(ESCAPE);
-  }
+  });
 
-  canvas.ontouchend = function(event) {
+  canvas.addEventListener(listener, function() {
     action(SPACE);
     console.log("Tapped to play")
-  }
-  
+  });
 
-  var btnUp = document.getElementById("btnUp");
-  var btnLeft = document.getElementById("btnLeft");
-  var btnRight = document.getElementById("btnRight");
-  var btnDown = document.getElementById("btnDown");
-
-  listener = "touchend";
 
   btnUp.addEventListener(listener, function() { action(direction.UP); } );
   btnLeft.addEventListener(listener, function() { action(direction.LEFT); } );
@@ -64,8 +65,10 @@ if (mobileIos && "standalone" in window.navigator && !window.navigator.standalon
   console.log("displaying banner");
   banner.classList.add("popup-open");
   banner.classList.remove("popup-closed");
+  listener = "none";
 } else {
   console.log("hiding banner");
   banner.classList.remove("popup-open");
   banner.classList.add("popup-closed");
+  listener = "touchend";
 }
