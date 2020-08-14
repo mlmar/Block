@@ -15,6 +15,7 @@
   * {
     touch-action: manipulation !important;
     user-select: none !important;
+    -webkit-user-select: none !important;
   }
 
   @font-face {
