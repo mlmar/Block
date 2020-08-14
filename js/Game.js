@@ -601,7 +601,9 @@ function reset() {
         blocks[i].state = direction.DOWN;
       } else if(mode == 4) {
         flip(blocks[i]);
-      } if(blocks[i].color == "BLACK" || blocks.state == "STOPPED") {
+      } 
+
+      if(blocks[i].color == "BLACK" || blocks.state == "STOPPED") {
         blocks[i].state = direction.DOWN;
       }
     }

@@ -107,7 +107,6 @@ footer {
   color: white !important;
 }
 
-
 .label-score {
   text-align: left;
 }
@@ -159,6 +158,11 @@ footer {
   width: 100%;
   max-width: 80vh;
   white-space: normal;
+}
+
+
+.label-version {
+  color: #03a9f4 !important;
 }
 
 .list {

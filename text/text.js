@@ -3,9 +3,7 @@ general =
 
 general += "\n\n";
 
-general +="MOBILE:";
-general += "\n - ios: add website to home screen for it to work."
-general += "\n - android: should work anyway."
+general +="MOBILE: Add the website to your home screen for full functionality.";
 
 scoreList = [
   "JOHNNY: 351 <----- try to beat this",
@@ -16,3 +14,5 @@ scoreList = [
   "alyssa: 126",
   "kris: 126 <------- but this is fine"
 ];
+
+version = "made by marcus, version: 3.3"

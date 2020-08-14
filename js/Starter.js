@@ -76,14 +76,13 @@ function setMode() {
 
 
 // input correct text to settings
-var topScore = document.getElementById("topScore");
-topScore.innerText = scoreList[0];
 var text = "";
 disclaimer.innerText = general;
-for(i = 1; i < scoreList.length; i++) {
+for(i = 0; i < scoreList.length; i++) {
    text += scoreList[i] + "\n";
 }
 list.innerText = text;
+document.getElementById("labelVersion").innerText = version;
 
 
 // DEFAULT STARTER CODE: LEVEL TICK LOWER THAN 20 WILL BREAK THE GAME
