@@ -483,8 +483,7 @@ function useItem(block, playerBlock = false) {
       originalSpeed = randomSpeed; // save original speed
       randomSpeed *= .66; // slow down to 66% of original speed
       for(i in blocks) { // modify all existing speeds
-        if(blocks[i].color != BLACK)
-          blocks[i].speed = randomSpeed;
+        blocks[i].speed = randomSpeed;
       }
       activeItem = true;
       bonus++;
@@ -603,7 +602,7 @@ function reset() {
         flip(blocks[i]);
       } 
 
-      if(blocks[i].color == "BLACK" || blocks.state == "STOPPED") {
+      if(blocks[i].color == BLACK || blocks[i].coor == WHITE || blocks.state == "STOPPED") {
         blocks[i].state = direction.DOWN;
       }
     }
