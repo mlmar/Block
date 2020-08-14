@@ -602,7 +602,7 @@ function reset() {
         flip(blocks[i]);
       } 
 
-      if(blocks[i].color == BLACK || blocks[i].coor == WHITE || blocks.state == "STOPPED") {
+      if(blocks[i].color == BLACK || blocks[i].color == WHITE || blocks[i].state == "STOPPED") {
         blocks[i].state = direction.DOWN;
       }
     }
