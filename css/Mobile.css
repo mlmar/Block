@@ -146,22 +146,22 @@
 
   .mobile-controls {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: 10% 26.6% 26.6% 26.6% 10%;
     /* grid-gap: 1vh; uncomment for smaller buttons */
     position: fixed;
-    top: 75vh;
+    top: 70vh;
     left: 0;
-    height: 20vh;
+    height: 25vh;
     width: 100%;
     background: none;
   }
 
   .control-btn {
     border: none;
-    border-radius: 10rem;
+    border-radius: 2rem;
     outline: none;
     /* background: linear-gradient(#747474, #212121); */
-    background: #8a8a8a73;
+    background: #3838384d;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
   }
 
@@ -202,8 +202,6 @@
   }
 
   .banner {
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     position: fixed;
     text-align: center;

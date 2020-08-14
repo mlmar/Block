@@ -5,7 +5,7 @@ A game where you control a block in order dodge other blocks.
 - Special blocks to help survival
 - __Mobile__: needs to run in a safari standalone ("add to home screen option")
   - issue: safari standalone has a 300ms delay between each click
-  - partial solution: ued FT Lab's fastclick.js to alleviate the delay on IOS but it still exists to an extent
+  - solution: used FT Lab's fastclick.js to alleviate the delay on IOS
 
 ### Starter
 There are three lines of code in Starter.js that is used to setup the game.

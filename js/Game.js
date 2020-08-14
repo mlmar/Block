@@ -27,7 +27,7 @@ canvas.height = iPhoneX && mobile ? 900 : canvas.height; // not x, use previous 
 
 var mobilePrimary = document.getElementById("mobilePrimary"); // start/settings btn
 var mobileControls = document.getElementById("mobileControls"); // u,d,l,r
-mobileControls.style.top = iPhoneX && mobile ? "75vh" : mobileControls.style.top;
+mobileControls.style.top = iPhoneX && mobile ? "72vh" : mobileControls.style.top;
 /********* END MOBILE DIMENSIONS *********/
 
 
@@ -591,8 +591,6 @@ function stop() {
     // mobilePrimary.classList.remove("popup-closed");
   }
 }
-
-
 
 // game reset
 //  initiate the reset transition
