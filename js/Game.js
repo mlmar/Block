@@ -27,7 +27,7 @@ canvas.height = iPhoneX && mobile ? 900 : canvas.height; // not x, use previous 
 
 var mobilePrimary = document.getElementById("mobilePrimary"); // start/settings btn
 var mobileControls = document.getElementById("mobileControls"); // u,d,l,r
-mobileControls.style.top = iPhoneX && mobile ? "72vh" : mobileControls.style.top;
+mobileControls.style.top = iPhoneX && mobile ? "68vh" : mobileControls.style.top;
 /********* END MOBILE DIMENSIONS *********/
 
 
@@ -607,6 +607,13 @@ function reset() {
       }
     }
     blocks[i].speed = 16; 
+
+    // catch all for any still blocks
+    if(!(blocks[i].state in directions)) {
+      blocks[i].state = direction.DOWN;
+      blocks[i].speed = 32;
+    }
+
   }
 
   window.requestAnimationFrame(transition);
