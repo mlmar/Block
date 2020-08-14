@@ -126,11 +126,13 @@ function walls(level_n) {
       var block = new Block(i * BLOCK_SIZE, 0-canvas.height*2, BLOCK_SIZE, canvas.height * 2, BLACK);
       block.state = direction.DOWN;
       block.speed = wallSpeed;
+      block.color = mobile ? WHITE : BLACK;
       blocks.push(block);
 
       var block2 = new Block(canvas.width - BLOCK_SIZE - i * BLOCK_SIZE, canvas.height, BLOCK_SIZE, canvas.height * 2, BLACK);
       block2.state = direction.UP;
       block2.speed = wallSpeed;
+      block2.color = mobile ? WHITE : BLACK;
       blocks.push(block2);
     }
   }
@@ -138,7 +140,7 @@ function walls(level_n) {
   // move the blocks into place
   if(score >= level_n && score < level_n + tick) {
     for(i in blocks) {
-      if(blocks[i].color == BLACK) {
+      if(blocks[i].color == BLACK || blocks[i].color == WHITE) {
         if(blocks[i].state == direction.DOWN && blocks[i].y2 > canvas.height) {
           blocks[i].state = "STOPPED";
         } else if(blocks[i].state == direction.UP && blocks[i].y < 0) {
@@ -171,7 +173,7 @@ function walls(level_n) {
   if(score == level_n + tick * 6) {
     console.log("Getting rid of the black bars");
     for(i in blocks) {
-      if(blocks[i].color == BLACK) {
+      if(blocks[i].color == BLACK || blocks[i].color == WHITE) {
         if(blocks[i].x <= canvas.width * .3) {
           blocks[i].state = direction.LEFT;
         } else  {

@@ -37,6 +37,8 @@ function addButtons() {
   btnLeft.addEventListener("click", function(e) { e.preventDefault() } );
   btnRight.addEventListener("click", function(e) { e.preventDefault() } );
   btnDown.addEventListener("click", function(e) { e.preventDefault() } );
+
+  divMode.addEventListener(listener, function() { setModeText() });
 }
 
 

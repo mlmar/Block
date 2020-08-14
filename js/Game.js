@@ -42,8 +42,8 @@ var overlaySettings = document.getElementById("overlaySettings");
 var disclaimer = document.getElementById("disclaimer");
 var colorPicker = document.getElementById("color");
 var list = document.getElementById("list");
-var slider = document.getElementById("slider");
-var labelDif = document.getElementById("labelMode");
+var divMode = document.getElementById("divMode");
+var labelMode = document.getElementById("labelMode");
 
 // black screen fade for level 9-10
 var overlayBlack = document.getElementById("overlayBlack");

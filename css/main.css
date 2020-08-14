@@ -118,6 +118,7 @@ footer {
 }
 
 .label-center {
+  display: block;
   text-align: center;
 }
 
@@ -164,15 +165,18 @@ footer {
   font-size: 1.2rem;
 }
 
-.divSlider {
+.divMode {
+  display: block;
   font-size: 3rem;
   text-align: center;
   width: 100%;
   color: white;
   max-width: 80vh;
+  user-select: none;
 }
 
 .divColor {
+  padding: .5rem;
   text-align: center;
 }
 

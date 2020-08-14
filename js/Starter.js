@@ -12,16 +12,25 @@ function settings(force = false) {
   }
 }
 
-slider.onchange = function(event) {
-  mode = parseFloat(slider.value);
-  labelDif.innerText = "mode: " + modes[mode];
+function setModeText() {
+  mode = (mode < modes.length - 1) ? mode + 1 : 0;
+  labelMode.innerText = "gamemode: " + modes[mode];
+
   if(mode == 0) {
-    labelDif.style.color = WHITE;
+    labelMode.style.color = WHITE;
   } else {
-    labelDif.style.color = colors[mode - 1];
+    labelMode.style.color = colors[mode - 1];
+
   }
   console.log(mode);
 }
+
+if(!mobile) {
+  divMode.onclick = function(event) {
+    setModeText();
+  }
+}
+
 
 
 // multiplier = num score between each level, cannot be lower than 20

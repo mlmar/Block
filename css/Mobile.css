@@ -86,7 +86,19 @@
   }
   
   .label {
-    font-size: 3.5vh;
+    font-size: 3.3vh;
+  }
+
+  .label-score {
+    word-break: keep-all;
+  }
+
+  .label-mode {
+    font-size: 6vh;
+  }
+
+  .menu {
+    grid-gap: 0;
   }
 
   /* settings */
@@ -111,6 +123,7 @@
   .btn-close {
     display: block;
     appearance: none;
+    height: 4vh;
     background-color: rgba(231, 231, 231, .25); 
     color: white;
     border: none;
