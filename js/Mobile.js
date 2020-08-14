@@ -52,8 +52,6 @@ if(mobile) {
 }
 
 
-
-
 /** show add baner if app already installed **/
 // https://stackoverflow.com/questions/50543163/can-i-detect-if-my-pwa-is-launched-as-an-app-or-visited-as-a-website
 const mobileIos = () => {
