@@ -220,7 +220,7 @@ function drawBlock(b) {
     if(!mobile) {
       ctx.font = !screen ? "3rem Impact" : "1rem Impact";
     } else {
-      ctx.font = !screen? "5vh Impact" : "2vh Impact";
+      ctx.font = !screen? "5vh Arial" : "2vh Arial";
     }
     ctx.fillText(b.text, b.x, b.y, b.width);
   }
