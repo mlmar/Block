@@ -33,7 +33,6 @@
     align-items: center;
     width: 100%;
     user-select: none;
-
     background: black;
     transition: background .5s linear !important;
     color: white !important;
@@ -52,11 +51,13 @@
   }
 
   .holder {
-    display: block;
+    display: flex;
+    justify-content: flex-start;
     width: 97%;
   }
 
   .holder-secondary {
+    /* margin-left: 5rem; */
     align-items: center;
     max-width: 100%;
   }

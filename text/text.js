@@ -15,4 +15,4 @@ scoreList = [
   "kris: 126 <------- but this is fine"
 ];
 
-version = "made by marcus, version: 3.8"
+version = "made by marcus, version: 3.9"
