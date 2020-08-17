@@ -1,7 +1,11 @@
 /***************************** BLOCK GAME *****************************/
 
 
-// fastclick.js
+/**** fastclick.js attachment to body
+  Needed fix 300ms delay between presses to detect double tap to zoom
+  on IOS. Was able to disable double tap to zoom in <meta> but delay 
+  still exists.
+*/
 if ('addEventListener' in document) {
   document.addEventListener('DOMContentLoaded', function() {
     FastClick.attach(document.body);
@@ -9,8 +13,7 @@ if ('addEventListener' in document) {
 }
 
 
-
-// page elements
+/**** get main canvas element and context to draw on it ****/
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
@@ -25,44 +28,43 @@ var iPhoneX = window.matchMedia("only screen and (min-height : 812px) and (orien
 console.log("iPhone X: " + iPhoneX);
 canvas.height = iPhoneX && mobile ? 900 : canvas.height; // not x, use previous value
 
-var mobilePrimary = document.getElementById("mobilePrimary"); // start/settings btn
 var mobileControls = document.getElementById("mobileControls"); // u,d,l,r
 mobileControls.style.top = iPhoneX && mobile ? "68vh" : mobileControls.style.top;
 /********* END MOBILE DIMENSIONS *********/
 
 
 
+// list of gamemodes just for the gamemode label and button
+const modes = ["original", "version one", "endurance", "waffle", "experimental"];
+var mode = 0 // variable that actually dictates the current mode, default is 0
 
-var mode = 0 // modified by settings
-const modes = ["original","version one","endurance","waffle","experimental"];
 
-
-// settings elements
+// elements for settings overay
 var overlaySettings = document.getElementById("overlaySettings");
-var disclaimer = document.getElementById("disclaimer");
-var colorPicker = document.getElementById("color");
-var list = document.getElementById("list");
-var divMode = document.getElementById("divMode");
-var labelMode = document.getElementById("labelMode");
+var divMode = document.getElementById("divMode"); // press to change gamemode
+var labelMode = document.getElementById("labelMode"); // gamemode label
+var disclaimer = document.getElementById("disclaimer"); // general text
+var colorPicker = document.getElementById("color"); // player color chooser
+var list = document.getElementById("list"); // manual scores list
 
-// black screen fade for level 9-10
+// used for darken() function to fade the screen to black
 var overlayBlack = document.getElementById("overlayBlack");
 
-// press space to start
+// overlay that shows "press space to start" and final score
 var overlay = document.getElementById("overlay");
+var labelTotal = document.getElementById("labelTotal");
 
 // bottom labels
 var labelScore = document.getElementById("labelScore");
 var labelBonus = document.getElementById("labelBonus");
 var labelLevel = document.getElementById("labelLevel");
-var labelTotal = document.getElementById("labelTotal");
 
-// colors
+/**** colors ****/
 const TRANSPARENT = "rgba(255, 255, 255, 0)";
 const WHITE = "WHITE";
 const BLACK = "BLACK";
 
-const BLUE = "rgb(3,169,244)";
+const BLUE = "rgb(3,169,244)"; // default player color
 const BLUE_T = "rgba(3,169,244,.3)";
 
 const ORANGE = "rgb(244,67,54)";
@@ -89,25 +91,20 @@ const colors = [ORANGE, GREEN, PINK, AQUA];
 // match the regular colors to their transparent counterparts
 function colorMatch(c) {
   switch(c) {
-    case BLUE:
-      return BLUE_T;
-    case ORANGE: 
-      return ORANGE_T;
-    case GREEN: 
-      return GREEN_T;
-    case PINK: 
-      return PINK_T;
-    case AQUA: 
-      return AQUA_T;
-    default:
-      return BLUE_T;  
+    case BLUE:    return BLUE_T;
+    case ORANGE:  return ORANGE_T;
+    case GREEN:   return GREEN_T;
+    case PINK:    return PINK_T;
+    case AQUA:    return AQUA_T;
+    default:      return BLUE_T;
   }
 }
 
+// default clear color changes depending on device (computer vs mobile)
 var default_clear_color = !mobile ? WHITE : BLACK;
 var clear_color = default_clear_color; // canvas background should be white
 
-// general block information
+/**** general block information specific to the player ****/
 const BLOCK_SIZE = 20; // arbitrary
 var STARTING_X = (canvas.width / 2) - (BLOCK_SIZE / 2); // center of the page
 var STARTING_Y = (canvas.height / 2) - (BLOCK_SIZE / 2); // center of the page
@@ -116,36 +113,33 @@ var player; // will be initialized as a Block object in the reset() function
 var playing = false; // true if game is in play
 var PLAYER_COLOR = BLUE; // default player color
 
-// variables that directly effect difficutly
+/**** these defaults are altered in the setMode() function ****/
 var default_gap = 32; // default delay between each block generation
 var default_speed = 3; // defualt speed for random block movement
 var default_height_limiter // default height limit for random blocks
+var height_limiter = default_height_limiter // dictate maximum height of random blocks
 
-
-// stacks for generation of random items and random blockss
-var items = []; // random items
-var blocks = []; // random blocks
-var randomSpeed = default_speed; // base speed for random blocks
+/**** arrays to hold various types of blocks throughout out the game ****/
+var items = []; // holds random item blocks
+var blocks = []; // holds the random blocks that player must avoid
+var randomSpeed = default_speed; // base speed for random blocks, constantly changed
 var randomDirections = []; // random directions for random blocks
 
-var height_limiter = default_height_limiter // dictate maximum height of random blocks in proportion to canvas height
-
-var ex20 = false;
+var ex20 = false; // arbitrary dev value
 
 // dynamic game control variables
 var time = 0; // increment time by 1 every game loop
 var gap = default_gap; // gap between generations of a random block
 var score = 0; // keeping track of score -- dictates level
-var bonus = 0; // bonus score
-var level = 1; // every "mutliplier", level increases
+var bonus = 0; // bonus score, award extra life
+var level = 1; // every tick, level increases
 
 // setting the score distance between each level
 //  call setLevelTick before starting
 var tick; // score in between each level
 var halftick; // half a tick
 
-var referencePoint; // will be used to calculate elapsed time for infinite runs
-
+var referencePoint; // will be used to calculate elapsed score for infinite runs
 
 // for item usage
 var lastUsed = "";
@@ -153,9 +147,11 @@ var activeItem;
 var originalSpeed; // used to return to original speed
 var originalScore; // used to meassure when a halftick has passed
 
+
+/*** ENUMS FOR KEYBOARD INPUT CODES ****/
 const ESCAPE = "Escape";
 const SPACE = "Space";
-// direction enum keycodes
+
 const direction = { 
   UP : "ArrowUp",
   DOWN : "ArrowDown",
@@ -166,7 +162,10 @@ const direction = {
   A: "KeyA",
   D: "KeyD"
 }
+
+// used to choose a random direction for random blocks
 const directions = [direction.UP, direction.DOWN, direction.LEFT, direction.RIGHT];
+
 
 // KNOWN BUG: pressing space multiple times during the reset screen
 //            will cal lthe reset method multiple times
@@ -174,12 +173,12 @@ const directions = [direction.UP, direction.DOWN, direction.LEFT, direction.RIGH
 //                    and only run on the first press
 var buffer = 0;
 
-
-var screen = true; 
+// always true at the beginning of the game, shows start screen
+var screen = true;
 
 /***************************** BLOCK CLASS *****************************/
 
-// Block object for player and blocks
+// Block object for player, blocks and position
 //  params: position x, position y, height, width, color
 var Block = function(x, y, width, height, color) {
   this.x = x; // top left x coordinate
@@ -191,15 +190,14 @@ var Block = function(x, y, width, height, color) {
   this.width = width;
   this.height = height;
   
-
   this.speed = BLOCK_SIZE; // default speed
 
   this.color = color;
   this.state; // block state
   
-  this.collide = true;
+  this.collide = true; // set to false to turn off block colission
 
-  this.text = "";
+  this.text = ""; // if not empty, drawblock will run fillText()
 }
 
 /***************************** RENDERING METHODS *****************************/
@@ -214,10 +212,10 @@ function clear() {
 function drawBlock(b) {
   ctx.fillStyle = b.color;
 
-  if(b.text == "") {
+  if(b.text == "") { // if text is empty, draw the actual block
     ctx.fillRect(b.x, b.y, b.width, b.height);
-  } else {
-    if(!mobile) {
+  } else { // if text is not empty, write the words to screen
+    if(!mobile) { // choose a web safe font if on mobile
       ctx.font = !screen ? "3rem Impact" : "1rem Impact";
     } else {
       ctx.font = !screen? "5vh Arial" : "2vh Arial";
@@ -226,8 +224,11 @@ function drawBlock(b) {
   }
 }
 
-// check if block is out of frame then delete
+// check if block is out of frame then shift the array to delete 
+// the oldest item
+//  param: first @ the first block in the blocks array
 function deleteOutOfFrame(first) {
+  // depending on the direction of the block, check if it is out of bounds
   switch(first.state) {
     case direction.UP:
       if(first.y2 < 0)
@@ -248,22 +249,28 @@ function deleteOutOfFrame(first) {
   }
 }
 
-// flip a block in the other direction
+// flip a block in the other direction based on its current direction
 function flip(block) {
-  if(block.state == direction.UP) {
+  switch(block.state) {
+    case direction.UP:
       block.state = direction.DOWN;
-  } else if(block.state == direction.DOWN) {
+      break;
+    case direction.DOWN:
       block.state = direction.UP;
-  } else if(block.state == direction.RIGHT) {
+      break;
+    case direction.RIGHT:
       block.state = direction.LEFT;
-  } else if(block.state == direction.LEFT) {
+      break;
+    case direction.LEFT:
       block.state = direction.RIGHT;
+      break;
   }
 }
 
 /***************************** MOVEMENT METHODS *****************************/
 
-// move in the direction 
+// PLAYER MOVEMENT METHOD
+//  param: key @ the inputted key code (arrow key or wasd)
 function move(key) {
   switch(key) {
     case direction.W:
@@ -272,18 +279,21 @@ function move(key) {
         player.y -= player.speed;
       }
       break;
+
     case direction.S:
     case direction.DOWN:
       if(player.y + player.height < canvas.height)  {
         player.y += player.speed;
       }
       break;
+
     case direction.A:
     case direction.LEFT:
       if(player.x > 1) {
         player.x -= player.speed;
       }
       break;
+
     case direction.D:
     case direction.RIGHT:
       if(player.x + player.width < canvas.width) {
@@ -292,16 +302,19 @@ function move(key) {
       break;
   }
 
+  // adjust the corner coordinates for the player block
   player.y2 = player.y + player.height;
   player.x2 = player.x + player.width;
 }
 
-// get currently pressed key and pass it to the move function
+// get currently pressed key and pass it to action function
 window.onkeydown = function(event) {
   var key = event.code;
   action(key);
 }
 
+
+// actions relegated to a seperate function to simulate key presses on mobile
 function action(key) {
   if(playing) { // only detect movement keys inputted while playing
     move(key);
@@ -315,7 +328,9 @@ function action(key) {
   }
 }
 
-// move the blocks based on their direction and speed
+// RANDOM BLOCK MOVEMENT METHOD
+//  param: block @ the block to be moved
+//  move the blocks based on their direction and speed
 function moveRandom(block) {
   switch(block.state) {
     case direction.UP:
@@ -332,8 +347,9 @@ function moveRandom(block) {
       break;
   }
 
-  blocks[i].y2 = blocks[i].y + blocks[i].height;
-  blocks[i].x2 = blocks[i].x + blocks[i].width;
+  // adjust corner coordinates of this block
+  block.y2 = block.y + block.height;
+  block.x2 = block.x + block.width;
 }
 
 
@@ -353,15 +369,18 @@ function collision(b1, b2) {
   // right of b2 within b2's left and right;
   var right = ((b2.x <= b1.x2) && (b1.x2 <= b2.x2));
   
-  // alternate
+  // check if x/y values of two blocks match
   var left_right = ((b1.x == b2.x) && (b1.x2 == b2.x2));
   var top_bottom = ((b1.y == b2.y) && (b1.y2 == b2.y2));
+
+  // check for all possible collision cases
   var collision = 
-    top && left_right || 
-    bottom && left_right || 
-    left && top_bottom || 
+    top && left_right     || 
+    bottom && left_right  || 
+    left && top_bottom    || 
     right && top_bottom;
 
+  // log collision in the console
   if(collision) {
     console.log(b1);
     console.log(b2);
@@ -396,10 +415,15 @@ function pickRandom(list, amount) {
 
 // create a random block with speed and direction (velocity)
 function randomBlock(speed, state, randomColor = false) {
+  // max amount of possible pots for a random block to spawn
+  //  should be divisible by BLOCK_SIZE
   var MAX_AMOUNT_X = canvas.width / BLOCK_SIZE;
   var MAX_AMOUNT_Y = canvas.height / BLOCK_SIZE
+
+  // max height for a random block
   var MAX_HEIGHT = canvas.height * height_limiter;
 
+  // get a random within a max amount
   var RANDOM_X = Math.floor(Math.random() * MAX_AMOUNT_X) * BLOCK_SIZE;
   var RANDOM_Y = Math.floor(Math.random() * MAX_AMOUNT_Y) * BLOCK_SIZE;
   var RANDOM_HEIGHT = Math.floor((Math.random() * MAX_HEIGHT) + canvas.height * .1);
@@ -421,8 +445,9 @@ function randomBlock(speed, state, randomColor = false) {
       break;
   }
 
-  if(randomColor || mode == 4 || mode == 3)
+  if(randomColor || mode == 3 || mode == 4) {
     block.color = pickRandom(colors, 1)[0];
+  }
   
   block.speed = speed;
   block.state = state;
@@ -441,14 +466,19 @@ function clutter() {
 
 /***************************** ITEM METHODS *****************************/
 
+// list of random effects to choose from
+//  slow and clear appear twice to make them more common
 var effects = ["slow", "slow", "clear", "clear", "life","reverse"];
-// create a randomItem
+
+// RANDOM ITEM CREATION METHOD
+//  param: state @ the effect of the item
 function randomItem(state) {
   var MAX_X = canvas.width / BLOCK_SIZE;
   var MAX_Y = canvas.height / BLOCK_SIZE;
   var RANDOM_X = Math.floor(Math.random() * MAX_X) * BLOCK_SIZE;
   var RANDOM_Y = Math.floor(Math.random() * MAX_Y) * BLOCK_SIZE;
 
+  // create an item a random x,y  with a specific color based on its state
   var item;
   switch(state) {
     case "slow":
@@ -475,9 +505,10 @@ function randomItem(state) {
 
 // method to consume an item
 function useItem(block, playerBlock = false) {
-  originalScore = score;
-  activeItem = true;
+  originalScore = score;  // score at time of consumption
+  activeItem = true; // indicates that an item has been consumed
 
+  // item effects
   switch(block.state) {
     case "slow":
       originalSpeed = randomSpeed; // save original speed
@@ -488,6 +519,7 @@ function useItem(block, playerBlock = false) {
       activeItem = true;
       bonus++;
       break;
+
     case "clear":
       for(i in blocks) {
         if(blocks[i].color != BLACK) {
@@ -499,22 +531,28 @@ function useItem(block, playerBlock = false) {
       bonus++;
       randomLaser(pickRandom(directions, 1)[0]);
       break;
+
     case "life":
       player.state = "life";
       player.color = PLAYER_YELLOW;
       break;
+
     case "point":
       bonus += 3;
       break;
+
     case "reverse":
       activeItem = true;
       bonus += 5;
       break;
   }
   
-  if(!playerBlock)
+  // this is specifically used to check if a reversal has been used
+  if(!playerBlock) {
     lastUsed = block.state;
-  items.pop();
+  }
+
+  items.pop();  // the length of items array will always be 1 so we can just pop it
 
 }
 
@@ -526,15 +564,17 @@ function useItem(block, playerBlock = false) {
 
 // update the page with new positions of all blocks
 function update() {
-  clear();
-  drawBlock(player);
+  clear();  // clear the board for redrawing
+  drawBlock(player); // redraw the player block at updated positions
 
-  // update coordinates of random blocks
+  // update positions of random blocks and check for collisions
   for(i in blocks) {
-    moveRandom(blocks[i]);
+    moveRandom(blocks[i]); 
     drawBlock(blocks[i]);
 
+    // if block is able to collide, check if it hits the player
     if(blocks[i].collide && collision(player, blocks[i]) && !ex20) {
+      // do not sto pthe game if the player has an extra life
       if(player.state == "life") {
         blocks[i].collide = false;
         blocks[i].color = colorMatch(blocks[i].color);
@@ -543,14 +583,17 @@ function update() {
         labelBonus.classList.remove("label-bonus");
       } else {
         console.log("Stop");
-        stop();
+        stop(); // stop the game if player does not have an extra life
       }
     }
     
-    if(items.length > 0 && collision(items[0], blocks[i]) && blocks[i].collide)
+    // check if the the block has collided with an item
+    if(items.length > 0 && collision(items[0], blocks[i]) && blocks[i].collide) {
       items.pop();
+    }
   }
 
+  // check if the player has collided with an item
   for(i in items) {
     drawBlock(items[i]);
 
@@ -586,8 +629,6 @@ function stop() {
   if(mobile) {
     mobileControls.classList.remove("popup-open");
     mobileControls.classList.add("popup-closed");
-    // mobilePrimary.classList.add("popup-open");
-    // mobilePrimary.classList.remove("popup-closed");
   }
 }
 
@@ -686,8 +727,6 @@ function start() {
   if(mobile) {
     mobileControls.classList.add("popup-open");
     mobileControls.classList.remove("popup-closed");
-    // mobilePrimary.classList.remove("popup-open");
-    // mobilePrimary.classList.add("popup-closed");
   }
 
   settings(true);

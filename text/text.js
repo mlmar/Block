@@ -6,7 +6,8 @@ general += "\n\n";
 general +="MOBILE: Add the website to your home screen for full functionality.";
 
 scoreList = [
-  "JOHNNY: 351 <----- try to beat this",
+  "SANG: 380 <----- try to beat this",
+  "johnny: 351",
   "karen: 309",
   "marcus: 295",
   "ivan: 289",  
@@ -15,4 +16,4 @@ scoreList = [
   "kris: 126 <------- but this is fine"
 ];
 
-version = "made by marcus, version: 3.9"
+version = "made by marcus, version: 3.9.1"
