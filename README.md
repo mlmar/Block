@@ -27,3 +27,4 @@ After running these three lines, _reset()_ can be called to start the game.
 
 #### Bugs
 - Grabbing a blue "slow" block right before a speed change will retain old speed
+- (IOS) turning on power saver while pwa is open will slow down the game significantly
