@@ -12,6 +12,7 @@ scoreList = [
   "marcus: 295",
   "ivan: 289",  
   "lucas: 286",
+  "dad: 154",
   "alyssa: 126",
   "kris: 126 <------- but this is fine"
 ];
