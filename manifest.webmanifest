@@ -11,6 +11,6 @@
   ],
   "name": "block",
   "short_name": "Block",
-  "start_url": "https://mlmar.github.io/Block",
-  "scope": "."
+  "start_url": "https://mlmar.github.io/Block/",
+  "scope": "https://mlmar.github.io/Block/"
 }
