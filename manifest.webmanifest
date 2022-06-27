@@ -1,6 +1,6 @@
 {
   "background_color": "black",
-  "description": "a block game made by marcus martinez",
+  "description": "a block game",
   "display": "fullscreen",
   "icons": [
     {
@@ -11,5 +11,6 @@
   ],
   "name": "block",
   "short_name": "Block",
-  "start_url": "index.html"
+  "start_url": "./",
+  "scope": "."
 }
