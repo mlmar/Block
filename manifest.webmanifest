@@ -1,7 +1,7 @@
 {
   "background_color": "black",
   "description": "a block game",
-  "display": "fullscreen",
+  "display": "standalone",
   "icons": [
     {
       "src": "text/icon.png",
